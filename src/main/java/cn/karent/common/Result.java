@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 响应包装
+ *
  * @author wanshengdao
  * @date 2024/6/13
  */

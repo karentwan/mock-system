@@ -27,9 +27,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidReferenceException.class)
     @ResponseBody
-    public Result<Object> invalidReferenceExceptionHandler(TemplateNotFoundException e) {
+    public Result<Object> invalidReferenceExceptionHandler(InvalidReferenceException e) {
         log.warn("模板渲染不对, 一般是缺少参数: ", e);
-        return Result.fail("400", "参数和模板渲染不匹配, 请检查");
+        return Result.fail("400", "参数和模板渲染不匹配, 请检查输入参数");
     }
 
     @ExceptionHandler(Throwable.class)
