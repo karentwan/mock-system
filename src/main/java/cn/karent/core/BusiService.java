@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author wanshengdao
@@ -31,6 +32,11 @@ public class BusiService {
      * 模板中请求参数的前缀
      */
     public static final String BODY = "body";
+
+    /**
+     * 模板中可以使用的函数的前缀
+     */
+    public static final String FUNCTION = "F";
 
     /**
      * 文件后缀
@@ -94,14 +100,34 @@ public class BusiService {
         return result;
     }
 
+    /**
+     * 渲染模板响应
+     *
+     * @param api     接口名, 对应模板文件名
+     * @param headers http请求头
+     * @param body    请求内容
+     * @return 响应
+     * @throws IOException
+     * @throws TemplateException
+     */
     public String render(String api, Map<String, Object> headers, Map<String, Object> body)
             throws IOException, TemplateException {
         String filePath = api + FILE_SUFFIX;
         Template template = configuration.getTemplate(filePath);
-        Map<String, Object> map = Map.of(HEADER, processKey(headers), BODY, body);
+        Map<String, Object> dataModel = Map.of(HEADER, processKey(headers), BODY, body, FUNCTION, createFunction());
         StringWriter writer = new StringWriter();
-        template.process(map, writer);
+        template.process(dataModel, writer);
         return writer.toString();
     }
+
+    /**
+     * 模板中可以使用的函数
+     *
+     * @return 函数集合
+     */
+    private Map<String, Object> createFunction() {
+        return Map.of("random", new Random());
+    }
+
 
 }

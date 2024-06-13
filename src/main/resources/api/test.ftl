@@ -9,5 +9,6 @@
 {
   "hello": "no token",
   "param": "${body.a}",
+  "random": "${F.random.nextInt()}"
 }
 </#if>
