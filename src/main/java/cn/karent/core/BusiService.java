@@ -42,7 +42,7 @@ public class BusiService {
     /**
      * 切换
      *
-     * @param c 待切换大小写的字符
+     * @param c    待切换大小写的字符
      * @param mode 要切换成大写还是小写
      * @return 切换完后的字符
      */
@@ -50,12 +50,18 @@ public class BusiService {
         char result = c;
         if (ToggleMode.UPPER.equals(mode) && (c >= 'a' && c <= 'z')) {
             result = (char) (c - 'a' + 'A');
-        } else if (ToggleMode.LOWER.equals(mode) && ( c >= 'A' && c <= 'Z')) {
+        } else if (ToggleMode.LOWER.equals(mode) && (c >= 'A' && c <= 'Z')) {
             result = (char) (c - 'A' + 'a');
         }
         return result;
     }
 
+    /**
+     * 转驼峰
+     *
+     * @param key 待处理的key
+     * @return 处理后的key
+     */
     private String camel(String key) {
         if (StringUtils.isBlank(key)) return key;
         char[] chs = key.toCharArray();
@@ -78,7 +84,7 @@ public class BusiService {
      * 对header里面的key进行规范化, 转换成驼峰风格
      *
      * @param headers http请求头
-     * @return
+     * @return 对所有的key处理后的http请求头
      */
     private Map<String, Object> processKey(Map<String, Object> headers) {
         Map<String, Object> result = new HashMap<>();

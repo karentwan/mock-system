@@ -30,7 +30,6 @@ public class ApiController {
 
     private final BusiService busiService;
 
-
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,
                              HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateException {

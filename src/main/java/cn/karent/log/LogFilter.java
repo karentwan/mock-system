@@ -28,7 +28,8 @@ public class LogFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         long start = System.currentTimeMillis();
         BodyCachingRequestWrapper requestWrapper = new BodyCachingRequestWrapper(request);
-        log.info("接口请求报文: {}", new String(requestWrapper.getRequestBody(), StandardCharsets.UTF_8));
+        log.info("{} {}, 请求体为: {}", request.getMethod(), request.getRequestURI(),
+                new String(requestWrapper.getRequestBody(), StandardCharsets.UTF_8));
 
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
 
