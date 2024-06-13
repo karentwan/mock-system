@@ -1,0 +1,15 @@
+
+management:
+  endpoint:
+    health:
+      show-details: never
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health,prometheus
+server:
+  port: 8079
+
+
