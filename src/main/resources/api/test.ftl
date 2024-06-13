@@ -2,7 +2,8 @@
 {
   "hello": "wan",
   "param": "${body.a}",
-  "token": "${header.token}"
+  "token": "${header.token}",
+  "content_type": "${header.contentType}"
 }
 <#else>
 {
