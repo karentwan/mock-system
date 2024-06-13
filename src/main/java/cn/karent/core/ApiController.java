@@ -28,7 +28,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApiController {
 
-    private final BusiService busiService;
+    private final RenderService renderService;
 
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,
@@ -49,10 +49,9 @@ public class ApiController {
                 body.put(key, request.getParameter(key));
             }
         }
-        String respStr = busiService.render(api, headers, body);
+        String respStr = renderService.render(api, headers, body);
         response.setHeader("Content-Type", "application/json");
-        ServletOutputStream sos = response.getOutputStream();
-        StreamUtils.copy(respStr.getBytes(), sos);
+        StreamUtils.copy(respStr.getBytes(), response.getOutputStream());
     }
 
 }

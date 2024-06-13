@@ -15,13 +15,15 @@ import java.util.Map;
 import java.util.Random;
 
 /**
+ * 响应结果渲染
+ *
  * @author wanshengdao
  * @date 2024/6/13
  */
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class BusiService {
+public class RenderService {
 
     /**
      * 模板中请求头的前缀
