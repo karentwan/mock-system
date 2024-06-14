@@ -55,11 +55,11 @@ public class TemplateConfig {
     @Bean
     public freemarker.template.Configuration configuration(Config config) throws IOException {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_33);
-        if (TemplateLoadMode.FILE.equals(config.getMode())) {
+        if (config.isStringMode()) {
+            configuration.setTemplateLoader(new StringTemplateLoader());
+        } else {
             Assert.isTrue(StringUtils.isNotBlank(config.getTemplatePath()), "文件模式下模板路径不能为空");
             configuration.setTemplateLoader(new FileTemplateLoader(new File(config.getTemplatePath())));
-        } else {
-            configuration.setTemplateLoader(new StringTemplateLoader());
         }
         configuration.setEncoding(Locale.CHINA, "UTF-8");
         return configuration;
