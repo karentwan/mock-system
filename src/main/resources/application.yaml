@@ -13,3 +13,8 @@ server:
   port: 8079
 
 
+template:
+  # 模板: STRING-字符串  FILE-文件
+  mode: FILE
+
+

@@ -1,5 +1,6 @@
 package cn.karent.core;
 
+import cn.karent.core.render.Render;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -23,7 +24,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class RenderService {
+public class TemplateService {
 
     /**
      * 模板中请求头的前缀
@@ -40,12 +41,8 @@ public class RenderService {
      */
     public static final String FUNCTION = "F";
 
-    /**
-     * 文件后缀
-     */
-    public static final String FILE_SUFFIX = ".ftl";
 
-    private final Configuration configuration;
+    private final Render render;
 
     /**
      * 切换
@@ -112,14 +109,9 @@ public class RenderService {
      * @throws IOException
      * @throws TemplateException
      */
-    public String render(String api, Map<String, Object> headers, Map<String, Object> body)
-            throws IOException, TemplateException {
-        String filePath = api + FILE_SUFFIX;
-        Template template = configuration.getTemplate(filePath);
+    public String render(String api, Map<String, Object> headers, Map<String, Object> body) {
         Map<String, Object> dataModel = Map.of(HEADER, processKey(headers), BODY, body, FUNCTION, createFunction());
-        StringWriter writer = new StringWriter();
-        template.process(dataModel, writer);
-        return writer.toString();
+        return render.render(api, dataModel);
     }
 
     /**

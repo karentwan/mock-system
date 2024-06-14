@@ -34,6 +34,10 @@ public class Result<T> {
         return result;
     }
 
+    public static <T> Result<T> ok() {
+        return ok(null);
+    }
+
     public static Result<Object> fail(String retCode, String retMsg) {
         Result<Object> result = new Result<>();
         result.setRetCode(retCode);

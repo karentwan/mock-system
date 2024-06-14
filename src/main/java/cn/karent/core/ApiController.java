@@ -3,7 +3,6 @@ package cn.karent.core;
 import cn.karent.util.JsonUtils;
 import freemarker.template.TemplateException;
 import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +27,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApiController {
 
-    private final RenderService renderService;
+    private final TemplateService templateService;
 
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,
                              HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateException {
         String path = request.getRequestURI();
-        String api = path.substring(1).replaceAll("/", "_");
         Map<String, Object> body = new HashMap<>();
         // POST请求获取请求体
         if (RequestMethod.POST.name().equals(request.getMethod())) {
@@ -49,7 +47,7 @@ public class ApiController {
                 body.put(key, request.getParameter(key));
             }
         }
-        String respStr = renderService.render(api, headers, body);
+        String respStr = templateService.render(path, headers, body);
         response.setHeader("Content-Type", "application/json");
         StreamUtils.copy(respStr.getBytes(), response.getOutputStream());
     }

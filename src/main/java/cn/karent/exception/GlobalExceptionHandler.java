@@ -32,6 +32,20 @@ public class GlobalExceptionHandler {
         return Result.fail("400", "参数和模板渲染不匹配, 请检查输入参数");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public Result<Object> illegalArgumentExceptionHandler(IllegalArgumentException e) {
+        log.warn("非法状态异常: ", e);
+        return Result.fail("400", e.getMessage());
+    }
+
+    @ExceptionHandler(RenderException.class)
+    @ResponseBody
+    public Result<Object> renderExceptionHandler(RenderException e) {
+        log.warn("渲染异常: ", e);
+        return Result.fail("400", e.getMessage());
+    }
+
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public Result<Object> throwableExceptionHandler(Throwable e) {
