@@ -65,14 +65,14 @@ public class TemplateService {
      * @param key 待处理的key
      * @return 处理后的key
      */
-    private String camel(String key) {
+    private String transformCamel(String key) {
         if (StringUtils.isBlank(key)) return key;
         char[] chs = key.toCharArray();
         StringBuilder sb = new StringBuilder();
         sb.append(toggleCase(chs[0], ToggleMode.LOWER));
         for (int i = 1, j = 0; i < chs.length; j = i++) {
             if (chs[i] != '-') {
-                // 这里表示 -T
+                // 例如content-type, 那么这里的j表示-, i表示t, t需要转换为大写字母
                 if (chs[j] == '-') {
                     sb.append(toggleCase(chs[i], ToggleMode.UPPER));
                 } else {
@@ -92,7 +92,7 @@ public class TemplateService {
     private Map<String, Object> processKeyOfHeaders(Map<String, Object> headers) {
         Map<String, Object> result = new HashMap<>();
         headers.forEach((k, v) -> {
-            result.put(camel(k), v);
+            result.put(transformCamel(k), v);
         });
         return result;
     }

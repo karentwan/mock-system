@@ -238,12 +238,4 @@
         </plugins>
     </build>
 
-    <!-- maven私有仓库配置 在这里增加后则不用修改本地maven的settings.xml配置 -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>Public Repositories</name>
-            <url>https://maven.jlpay.com/repository/public/</url>
-        </repository>
-    </repositories>
 </project>

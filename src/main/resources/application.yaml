@@ -15,7 +15,8 @@ server:
 
 template:
   # 模板: STRING -字符串  FILE -文件
-  mode: FILE
-  template-path: E:/Output/mock
+  mode: STRING
+  # FILE模式下存在模板的目录
+  template-path: ./templates
 
 

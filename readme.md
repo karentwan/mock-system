@@ -1,5 +1,13 @@
 ### 使用docker部署
 
+先编译出服务的jar包，可以使用idea的package指令，或者使用maven命令，如下:
+
+```shell
+
+mvn package
+
+```
+
 构建docker镜像
 ```shell
 
@@ -64,5 +72,8 @@ docker run -e mode=FILE -e path=/app/data -p 8079:8079 mock-system
 
 ```
 
-FILE模式表示模板的响应内容放在/app/data目录下面，该模式下，只能响应json格式的内容，且不能指定响应头。
+FILE模式表响应的模板放在/app/data目录下面。
+
+该模式下，只能响应json格式的内容，且不能指定响应头。
+
 其中文件必须以`.ftl`格式结尾，文件名为接口名称(`/`被替换为_)，举个例子，接口/test/a/b,那么对应的文件名为test_a_b.ftl。
