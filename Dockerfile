@@ -16,6 +16,9 @@ ENV mode='STRING'
 ENV path="/app/data"
 
 
+# 创建文件夹
+RUN mkdir ${path}
+
+
 # 定义应用程序的启动命令
-#cmd ["java", "-jar", "mock-system.jar"]
-ENTRYPOINT ["sh","-c","java -Dtemplate.mode=${mode} -Dpath=template.template-path=${path} -jar mock-system.jar "]
+ENTRYPOINT ["sh","-c","java -Dtemplate.mode=${mode} -Dtemplate.template-path=${path} -jar mock-system.jar"]

@@ -5,6 +5,7 @@ import freemarker.cache.StringTemplateLoader;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import java.util.Locale;
  * @date 2024/6/13
  */
 @Configuration
+@Slf4j
 public class TemplateConfig {
 
 
@@ -55,6 +57,7 @@ public class TemplateConfig {
     @Bean
     public freemarker.template.Configuration configuration(Config config) throws IOException {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_33);
+        log.info("启动的渲染模式: {}\t文件路径: {}", config.getMode(), config.getTemplatePath());
         if (config.isStringMode()) {
             configuration.setTemplateLoader(new StringTemplateLoader());
         } else {
