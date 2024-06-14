@@ -1,14 +1,12 @@
-package cn.karent.core.cmd;
+package cn.karent.core.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import java.util.Map;
 
 /**
- * 配置请求
- *
  * @author wanshengdao
  * @date 2024/6/14
  */
@@ -19,23 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @Builder
 @Slf4j
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ConfigCmd {
+public class Response {
 
-    /**
-     * 接口名称
-     */
-    @NotBlank
-    private String api;
+    private Map<String, String> headers;
 
-    /**
-     * 响应头
-     */
-    private String headers;
-
-    /**
-     * 模板响应
-     */
-    @NotBlank
-    private String template;
+    private String body;
 
 }

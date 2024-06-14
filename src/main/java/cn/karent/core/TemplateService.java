@@ -1,8 +1,7 @@
 package cn.karent.core;
 
+import cn.karent.core.model.Response;
 import cn.karent.core.render.Render;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -91,7 +89,7 @@ public class TemplateService {
      * @param headers http请求头
      * @return 对所有的key处理后的http请求头
      */
-    private Map<String, Object> processKey(Map<String, Object> headers) {
+    private Map<String, Object> processKeyOfHeaders(Map<String, Object> headers) {
         Map<String, Object> result = new HashMap<>();
         headers.forEach((k, v) -> {
             result.put(camel(k), v);
@@ -109,9 +107,14 @@ public class TemplateService {
      * @throws IOException
      * @throws TemplateException
      */
-    public String render(String api, Map<String, Object> headers, Map<String, Object> body) {
-        Map<String, Object> dataModel = Map.of(HEADER, processKey(headers), BODY, body, FUNCTION, createFunction());
-        return render.render(api, dataModel);
+    public Response render(String api, Map<String, Object> headers, Map<String, Object> body) {
+        Map<String, Object> dataModel = Map.of(HEADER, processKeyOfHeaders(headers), BODY, body, FUNCTION, createFunction());
+        String content = render.renderContent(api, dataModel);
+        Map<String, String> responseHeaders = render.renderHeader(api);
+        return Response.builder()
+                .headers(responseHeaders)
+                .body(content)
+                .build();
     }
 
     /**

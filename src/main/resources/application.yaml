@@ -14,7 +14,7 @@ server:
 
 
 template:
-  # 模板: STRING-字符串  FILE-文件
-  mode: FILE
+  # 模板: STRING -字符串  FILE -文件
+  mode: STRING
 
 

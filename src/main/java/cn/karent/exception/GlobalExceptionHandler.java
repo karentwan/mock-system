@@ -4,9 +4,17 @@ import cn.karent.common.Result;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.List;
 
 /**
  * 全局异常处理
@@ -44,6 +52,28 @@ public class GlobalExceptionHandler {
     public Result<Object> renderExceptionHandler(RenderException e) {
         log.warn("渲染异常: ", e);
         return Result.fail("400", e.getMessage());
+    }
+
+
+    @ResponseBody
+    @ExceptionHandler(BindException.class)
+    public Result<Object> paramBindExceptionHandler(BindException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        String msg = buildErrorMsg(bindingResult.getAllErrors());
+        log.info("invalid request param, msg: {}", msg, e);
+        return Result.fail("400", msg);
+    }
+
+    private String buildErrorMsg(List<ObjectError> errors) {
+        StringBuilder sb = new StringBuilder();
+        errors.forEach(error -> {
+            if (error instanceof FieldError fieldError) {
+                String field = fieldError.getField();
+                sb.append(field).append(":");
+            }
+            sb.append(error.getDefaultMessage()).append(";");
+        });
+        return sb.toString();
     }
 
     @ExceptionHandler(Throwable.class)

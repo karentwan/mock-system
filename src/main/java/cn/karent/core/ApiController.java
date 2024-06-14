@@ -1,5 +1,6 @@
 package cn.karent.core;
 
+import cn.karent.core.model.Response;
 import cn.karent.util.JsonUtils;
 import freemarker.template.TemplateException;
 import jakarta.servlet.ServletInputStream;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -19,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 处理mock接口响应的控制器
+ *
  * @author wanshengdao
  * @date 2024/6/13
  */
@@ -29,6 +33,15 @@ public class ApiController {
 
     private final TemplateService templateService;
 
+    /**
+     * mock接口响应
+     *
+     * @param headers  http请求头
+     * @param request  http请求
+     * @param response http响应
+     * @throws IOException
+     * @throws TemplateException
+     */
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,
                              HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateException {
@@ -39,7 +52,7 @@ public class ApiController {
             ServletInputStream is = request.getInputStream();
             String str = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
             body = JsonUtils.parseMap(str);
-        // GET请求获取地址栏上的参数
+            // GET请求获取地址栏上的参数
         } else {
             Enumeration<String> keys = request.getParameterNames();
             while (keys.hasMoreElements()) {
@@ -47,9 +60,9 @@ public class ApiController {
                 body.put(key, request.getParameter(key));
             }
         }
-        String respStr = templateService.render(path, headers, body);
-        response.setHeader("Content-Type", "application/json");
-        StreamUtils.copy(respStr.getBytes(), response.getOutputStream());
+        Response respStr = templateService.render(path, headers, body);
+        respStr.getHeaders().forEach(response::addHeader);
+        StreamUtils.copy(respStr.getBody().getBytes(), response.getOutputStream());
     }
 
 }

@@ -1,6 +1,5 @@
 package cn.karent.core.render;
 
-import cn.karent.common.TemplateLoadMode;
 import cn.karent.exception.RenderException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -35,7 +34,12 @@ public class FileRender implements Render {
     private final Configuration configuration;
 
     @Override
-    public String render(String api, Map<String, Object> dataModel) {
+    public Map<String, String> renderHeader(String api) {
+        return Map.of("Content-Type", "application/json");
+    }
+
+    @Override
+    public String renderContent(String api, Map<String, Object> dataModel) {
         api = api.substring(1).replaceAll("/", "_");
         String filePath = api + FILE_SUFFIX;
         try {
