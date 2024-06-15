@@ -19,7 +19,6 @@
         <spring.cloud.version>2022.0.3</spring.cloud.version>
         <archunit.version>1.0.1</archunit.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <jlpay-commons.version>3.2.1</jlpay-commons.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <alibaba.cloud.version>2021.0.4.0</alibaba.cloud.version>
         <nacos.version>2022.0.0.0-RC2</nacos.version>
