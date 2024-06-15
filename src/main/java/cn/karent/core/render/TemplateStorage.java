@@ -91,7 +91,7 @@ public class TemplateStorage {
      * @return 模板
      */
     @Nullable
-    public Entry<String> getTpl(String api) {
+    private Entry<String> getTpl(String api) {
         return templates.get(api);
     }
 

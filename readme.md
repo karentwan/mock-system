@@ -10,10 +10,8 @@ mvn package
 
 构建docker镜像
 ```shell
-
 # 进入工程目录，执行
-docker build -t mock-system .
-
+docker build -t mock .
 ```
 
 ### 服务启动
@@ -24,15 +22,12 @@ docker build -t mock-system .
 
 启动命令如下：
 ```shell
-
-docker run -e mode=STRING -p 8079:8079 mock-system
-
+docker run -e mode=STRING -p 8079:8079 mock
 ```
 
 STRING模式表示可以通过接口配置模板，配置接口如下
 
 ```shell
-
 POST http://localhost:8079/template/config
 
 {
@@ -40,13 +35,11 @@ POST http://localhost:8079/template/config
     "headers": "{\"Content-Type\": \"text/plain\", \"cust\": \"aaa\"}", 
     "template": "{\"a\": \"wan\"}"
 }
-
 ```
 其中api表示接口名称, headers表示响应头, 可以不配, template表示模板响应的内容。
 
 配置完后访问：
 ```shell
-
 POST http://localhost:8079/test
 
 {
@@ -59,7 +52,6 @@ POST http://localhost:8079/test
 {
     "a": "wan"
 }
-
 ```
 
 - FILE -文件模式
@@ -67,13 +59,11 @@ POST http://localhost:8079/test
 启动命令如下：
 
 ```shell
-
-docker run -e mode=FILE -e path=/app/data -p 8079:8079 mock-system
-
+docker run -e mode=FILE -e path=/app/data -p 8079:8079 mock
 ```
 
-FILE模式表响应的模板放在/app/data目录下面。
+FILE模式表示响应的模板放在/app/data目录下面。
 
-该模式下，只能响应json格式的内容，且不能指定响应头。
+该模式下，不能指定响应头, 响应体只能是JSON格式。
 
-其中文件必须以`.ftl`格式结尾，文件名为接口名称(`/`被替换为_)，举个例子，接口/test/a/b,那么对应的文件名为test_a_b.ftl。
+模板文件必须以`.ftl`格式结尾，文件名为接口名称(`/`被替换为_)，举个例子，接口/test/a/b,那么对应的文件名为`test_a_b.ftl`。
