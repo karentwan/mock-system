@@ -1,6 +1,6 @@
 package cn.karent.core;
 
-import cn.karent.common.OptionalUtils;
+import cn.karent.util.OptionalUtils;
 import cn.karent.common.Result;
 import cn.karent.common.TemplateConfig;
 import cn.karent.core.cmd.ConfigCmd;
@@ -36,6 +36,7 @@ public class ConfigController {
 
     /**
      * 配置模板
+     *
      * @return 配置
      */
     @PostMapping(CONFIG_URL)

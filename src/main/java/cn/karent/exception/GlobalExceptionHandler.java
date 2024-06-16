@@ -23,20 +23,6 @@ import java.util.List;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(TemplateNotFoundException.class)
-    @ResponseBody
-    public Result<Object> templateNotFoundHandler(TemplateNotFoundException e) {
-        log.warn("未找到模板: ", e);
-        return Result.fail("404", "接口不存在");
-    }
-
-    @ExceptionHandler(InvalidReferenceException.class)
-    @ResponseBody
-    public Result<Object> invalidReferenceExceptionHandler(InvalidReferenceException e) {
-        log.warn("模板渲染不对, 一般是缺少参数: ", e);
-        return Result.fail("400", "参数和模板渲染不匹配, 请检查输入参数");
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
     public Result<Object> illegalArgumentExceptionHandler(IllegalArgumentException e) {
