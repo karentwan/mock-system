@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 import java.io.IOException;
 import java.util.*;
@@ -54,7 +53,6 @@ public class PluginChain {
         // 设置响应头
         Map<String, String> headers = collectResponseHeaders(responseAdapter);
         response.setHeaders(headers);
-        StreamUtils.copy(response.getBody(), servletResponse.getOutputStream());
     }
 
     @NotNull

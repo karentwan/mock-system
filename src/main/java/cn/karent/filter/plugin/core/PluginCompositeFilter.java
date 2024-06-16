@@ -15,7 +15,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -50,16 +49,26 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NotNull HttpServletRequest servletRequest,
                                     @NotNull HttpServletResponse servletResponse,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
+        // 构造插件调用链
         List<PluginConfig> plugins = templateStorage.getPlugins(servletRequest.getRequestURI());
         PluginChain pluginChain = pluginManager.createPluginChain(plugins, servletRequest, servletResponse, filterChain);
+
+        // 创建请求对象
         Map<String, String> headers = collectRequestHeader(servletRequest);
         ServletInputStream sis = servletRequest.getInputStream();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         StreamUtils.copy(sis, bos);
         byte[] content = bos.toByteArray();
         Request req = new Request(headers, content);
+
+        // 创建响应对象
         Response resp = new Response();
+
+        // 插件调用
         pluginChain.doProcess(req, resp);
+
+        // 响应写回
+        StreamUtils.copy(resp.getBody(), servletResponse.getOutputStream());
     }
 
     private Map<String, String> collectRequestHeader(@NotNull HttpServletRequest request) {
