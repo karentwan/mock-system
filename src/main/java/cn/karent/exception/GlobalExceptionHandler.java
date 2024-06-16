@@ -4,7 +4,6 @@ import cn.karent.common.Result;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -12,8 +11,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.util.List;
 
 /**
@@ -25,20 +22,6 @@ import java.util.List;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(TemplateNotFoundException.class)
-    @ResponseBody
-    public Result<Object> templateNotFoundHandler(TemplateNotFoundException e) {
-        log.warn("未找到模板: ", e);
-        return Result.fail("404", "接口不存在");
-    }
-
-    @ExceptionHandler(InvalidReferenceException.class)
-    @ResponseBody
-    public Result<Object> invalidReferenceExceptionHandler(InvalidReferenceException e) {
-        log.warn("模板渲染不对, 一般是缺少参数: ", e);
-        return Result.fail("400", "参数和模板渲染不匹配, 请检查输入参数");
-    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody

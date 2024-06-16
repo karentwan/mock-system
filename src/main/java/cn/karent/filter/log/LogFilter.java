@@ -1,4 +1,4 @@
-package cn.karent.log;
+package cn.karent.filter.log;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -6,6 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -22,10 +25,11 @@ import java.nio.charset.StandardCharsets;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@Order(value = Ordered.HIGHEST_PRECEDENCE)
 public class LogFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         long start = System.currentTimeMillis();
         BodyCachingRequestWrapper requestWrapper = new BodyCachingRequestWrapper(request);
         log.info("{} {}, 请求体为: {}", request.getMethod(), request.getRequestURI(),

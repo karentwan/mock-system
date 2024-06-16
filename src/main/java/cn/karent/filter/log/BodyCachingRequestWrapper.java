@@ -1,12 +1,11 @@
-package cn.karent.log;
+package cn.karent.filter.log;
 
-import jakarta.servlet.ReadListener;
+import cn.karent.common.ServletInputStreamAdapter;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.springframework.util.StreamUtils;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -17,9 +16,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class BodyCachingRequestWrapper extends HttpServletRequestWrapper {
 
-    private byte[] body;
+    private final byte[] body;
 
-    private ServletInputStream inputStream;
+    private final ServletInputStream inputStream;
 
     public BodyCachingRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
@@ -42,27 +41,6 @@ public class BodyCachingRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private ServletInputStream createInputStream(byte[] cache) {
-        ByteArrayInputStream bis = new ByteArrayInputStream(cache);
-        return new ServletInputStream() {
-            @Override
-            public boolean isFinished() {
-                return bis.available() == 0;
-            }
-
-            @Override
-            public boolean isReady() {
-                return true;
-            }
-
-            @Override
-            public void setReadListener(ReadListener listener) {
-
-            }
-
-            @Override
-            public int read() throws IOException {
-                return bis.read();
-            }
-        };
+        return new ServletInputStreamAdapter(cache);
     }
 }

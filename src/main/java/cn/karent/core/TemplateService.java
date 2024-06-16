@@ -7,7 +7,6 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +38,9 @@ public class TemplateService {
      */
     public static final String FUNCTION = "F";
 
-
+    /**
+     * 响应渲染器
+     */
     private final Render render;
 
     /**

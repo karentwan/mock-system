@@ -1,7 +1,6 @@
 package cn.karent.core.render;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import cn.karent.core.model.PluginConfig;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.*;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -30,13 +30,25 @@ public class TemplateStorage {
     @Slf4j
     static class Entry<T> {
 
+        /**
+         * 响应头
+         */
         private Map<String, String> headers;
 
+        /**
+         * 插件列表
+         */
+        private List<PluginConfig> plugins;
+
+        /**
+         * 响应模板, 该模板经过freemarker渲染后就是真正的响应内容
+         */
         private T template;
 
-        public Entry(Map<String, String> headers, T template) {
+        public Entry(Map<String, String> headers, T template, List<PluginConfig> plugins) {
             this.headers = headers;
             this.template = template;
+            this.plugins = plugins;
         }
     }
 
@@ -55,7 +67,7 @@ public class TemplateStorage {
      * @throws IOException
      */
     @SuppressWarnings("all")
-    public Entry<Template> getTemplate(String api) throws IOException {
+    private Entry<Template> getEntry(String api) throws IOException {
         Entry<Template> template = cache.get(api);
         if (template == null) {
             synchronized (this) {
@@ -63,7 +75,7 @@ public class TemplateStorage {
                     Entry<String> entry = getTpl(api);
                     Assert.notNull(entry, "未配置该模板");
                     Template tpl = new Template(api, entry.getTemplate(), configuration);
-                    template = new Entry<>(entry.getHeaders(), tpl);
+                    template = new Entry<>(entry.getHeaders(), tpl, entry.getPlugins());
                     cache.put(api, template);
                 }
             }
@@ -72,14 +84,48 @@ public class TemplateStorage {
     }
 
     /**
+     * 获取响应头
+     *
+     * @param api
+     * @return
+     * @throws IOException
+     */
+    public Map<String, String> getHeaders(String api) throws IOException {
+        return getEntry(api).getHeaders();
+    }
+
+    /**
+     * 获取响应模板
+     *
+     * @param api
+     * @return
+     * @throws IOException
+     */
+    public Template getTemplate(String api) throws IOException {
+        return getEntry(api).getTemplate();
+    }
+
+    /**
+     * 获取配置的插件
+     *
+     * @param api
+     * @return
+     * @throws IOException
+     */
+    public List<PluginConfig> getPlugins(String api) throws IOException {
+        return getEntry(api).getPlugins();
+    }
+
+    /**
      * 存储模板
      *
      * @param api      接口api
      * @param headers  http响应头
      * @param template 模板内容
+     * @param plugins  插件列表
      */
-    public void store(String api, Map<String, String> headers, String template) {
-        Entry<String> entry = new Entry<>(headers, template);
+    public void store(String api, Map<String, String> headers, String template, List<PluginConfig> plugins) {
+        Entry<String> entry = new Entry<>(headers, template, plugins);
         templates.put(api, entry);
         cache.remove(api);
     }
