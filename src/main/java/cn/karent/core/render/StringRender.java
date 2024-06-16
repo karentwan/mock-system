@@ -29,7 +29,7 @@ public class StringRender implements Render {
     @Override
     public String renderContent(String api, Map<String, Object> dataModel) {
         try {
-            Template template = templateStorage.getTemplate(api).getTemplate();
+            Template template = templateStorage.getTemplate(api);
             StringWriter writer = new StringWriter();
             template.process(dataModel, writer);
             return writer.toString();
@@ -41,7 +41,7 @@ public class StringRender implements Render {
     @Override
     public Map<String, String> renderHeader(String api) {
         try {
-            return templateStorage.getTemplate(api).getHeaders();
+            return templateStorage.getHeaders(api);
         } catch (IOException e) {
             throw new RenderException(e);
         }

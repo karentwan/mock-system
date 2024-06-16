@@ -1,10 +1,12 @@
 package cn.karent.core.cmd;
 
+import cn.karent.core.model.PluginConfig;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 /**
  * 配置请求
@@ -37,5 +39,10 @@ public class ConfigCmd {
      */
     @NotBlank
     private String template;
+
+    /**
+     * 插件
+     */
+    private List<PluginConfig> plugins;
 
 }

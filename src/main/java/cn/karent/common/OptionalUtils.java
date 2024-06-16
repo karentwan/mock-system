@@ -7,7 +7,7 @@ import java.util.function.Predicate;
  * @author wanshengdao
  * @date 2024/4/1
  */
-public class OptionalUtils {
+public abstract class OptionalUtils {
 
     /**
      * 创建一个Optional对象，如果t满足predicate条件，则返回Optional.of(t)，否则返回Optional.empty()

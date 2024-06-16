@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -44,7 +43,7 @@ public class ApiController {
      */
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,
-                             HttpServletRequest request, HttpServletResponse response) throws IOException, TemplateException {
+                             HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getRequestURI();
         Map<String, Object> body = new HashMap<>();
         // POST请求获取请求体

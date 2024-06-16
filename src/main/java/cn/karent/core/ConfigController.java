@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
 public class ConfigController {
 
     public static final String DEFAULT_RESPONSE_HEADER = "{\"content-type\": \"application/json\"}";
+    public static final String CONFIG_URL = "/template/config";
 
     private final TemplateConfig.Config templateConfig;
 
@@ -38,14 +38,14 @@ public class ConfigController {
      * 配置模板
      * @return 配置
      */
-    @PostMapping("/template/config")
+    @PostMapping(CONFIG_URL)
     public Result<String> config(@Valid @RequestBody ConfigCmd cmd) {
         Assert.isTrue(templateConfig.isStringMode(), "非字符串模式下不能配置模板");
         String headerStr = OptionalUtils.ofCond(cmd.getHeaders(), StringUtils::isNotBlank).orElse(DEFAULT_RESPONSE_HEADER);
         Map<String, Object> headers = JsonUtils.parseMap(headerStr);
         Map<String, String> collect = headers.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
-        templateStorage.store(cmd.getApi(), collect, cmd.getTemplate());
+        templateStorage.store(cmd.getApi(), collect, cmd.getTemplate(), cmd.getPlugins());
         return Result.ok();
     }
 
