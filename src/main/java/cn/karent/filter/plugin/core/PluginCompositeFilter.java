@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
@@ -63,12 +64,9 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
             PluginChain pluginChain = pluginManager.createPluginChain(plugins, servletRequest, servletResponse, filterChain);
 
             // 创建请求对象
-            Map<String, String> headers = collectRequestHeader(servletRequest);
-            ServletInputStream sis = servletRequest.getInputStream();
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            StreamUtils.copy(sis, bos);
-            byte[] content = bos.toByteArray();
-            Request req = new Request(headers, content);
+            StreamUtils.copy(servletRequest.getInputStream(), bos);
+            Request req = new Request(collectRequestHeader(servletRequest), bos.toByteArray());
 
             // 创建响应对象
             Response resp = new Response();
@@ -76,8 +74,17 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
             // 插件调用
             pluginChain.doProcess(req, resp);
 
-            // 响应写回
-            StreamUtils.copy(resp.getBody(), servletResponse.getOutputStream());
+            // http状态码写回
+            HttpStatus status = Optional.ofNullable(resp.getStatus()).orElse(HttpStatus.OK);
+            servletResponse.setStatus(status.value());
+
+            // 请求头写回
+            Map<String, String> respHeaders = resp.getHeaders();
+            respHeaders.forEach(servletResponse::addHeader);
+
+            // 响应内容写回
+            byte[] bytes = Optional.ofNullable(resp.getBody()).orElse(new byte[0]);
+            StreamUtils.copy(bytes, servletResponse.getOutputStream());
         } catch (Exception e) {
             processExceptionWithGlobalExceptionHandler(servletRequest, servletResponse, e);
         }

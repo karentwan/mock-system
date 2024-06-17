@@ -46,13 +46,10 @@ public class PluginChain {
         BodyHttpServletRequestAdapter requestAdapter = new BodyHttpServletRequestAdapter(servletRequest, request.getBody());
         ContentCachingResponseWrapper responseAdapter = new ContentCachingResponseWrapper(servletResponse);
         filterChain.doFilter(requestAdapter, responseAdapter);
-        // 将response放入
-        byte[] content = responseAdapter.getContentAsByteArray();
-        // 设置响应体
-        response.setBody(content);
-        // 设置响应头
-        Map<String, String> headers = collectResponseHeaders(responseAdapter);
-        response.setHeaders(headers);
+        // 拿到响应体
+        response.setBody(responseAdapter.getContentAsByteArray());
+        // 拿到响应头
+        response.setHeaders(collectResponseHeaders(responseAdapter));
     }
 
     @NotNull
