@@ -34,12 +34,12 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      * @throws IOException
      */
     @SuppressWarnings("all")
-    private Config<Template> getEntry(String api) throws IOException {
+    private Config<Template> getSavedTemplate(String api) throws IOException {
         Config<Template> template = cache.get(api);
         if (template == null) {
             synchronized (this) {
                 if (template == null) {
-                    Config<String> config = getTpl(api);
+                    Config<String> config = getSavedTemplate0(api);
                     Assert.notNull(config, "未配置该模板");
                     Template tpl = new Template(api, config.getTemplate(), configuration);
                     template = new Config<>(config.getHeaders(), tpl, config.getPlugins());
@@ -59,7 +59,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      */
     @Override
     public Map<String, String> getHeaders(String api) throws IOException {
-        return getEntry(api).getHeaders();
+        return getSavedTemplate(api).getHeaders();
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      */
     @Override
     public Template getTemplate(String api) throws IOException {
-        return getEntry(api).getTemplate();
+        return getSavedTemplate(api).getTemplate();
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      */
     @Override
     public List<PluginConfig> getPlugins(String api) throws IOException {
-        return getEntry(api).getPlugins();
+        return getSavedTemplate(api).getPlugins();
     }
 
     /**
@@ -116,7 +116,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      * @return 响应模板
      */
     @Nullable
-    protected abstract Config<String> getTpl(String api);
+    protected abstract Config<String> getSavedTemplate0(String api);
 
     @Setter
     @Getter

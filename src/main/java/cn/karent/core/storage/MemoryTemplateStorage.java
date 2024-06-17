@@ -31,7 +31,7 @@ public class MemoryTemplateStorage extends AbstractTemplateStorage {
      */
     @Override
     @Nullable
-    protected Config<String> getTpl(String api) {
+    protected Config<String> getSavedTemplate0(String api) {
         return templates.get(api);
     }
 

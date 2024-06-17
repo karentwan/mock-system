@@ -85,7 +85,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
      */
     @Override
     @Nullable
-    protected Config<String> getTpl(String api) {
+    protected Config<String> getSavedTemplate0(String api) {
         String path = templateDirectory + SLASH +
                 getRealApi(api);
         log.info("从文件加载配置的模板, path: {}", path);
