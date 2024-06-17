@@ -25,7 +25,7 @@ public class PostParsePlugin extends PluginAdapter {
 
     public static final String CONTENT_TYPE = "Content-Type";
 
-    private final ParserComposite parserComposite = new ParserComposite();
+    private final Parser parser = new ParserComposite();
 
     /**
      * 是否应该过滤, 只处理POST请求
@@ -55,8 +55,8 @@ public class PostParsePlugin extends PluginAdapter {
             return;
         }
         String contentType = getContentType(request);
-        if (parserComposite.match(contentType)) {
-            byte[] parse = parserComposite.parse(contentType, request.getBody());
+        if (parser.match(contentType)) {
+            byte[] parse = parser.parse(contentType, request.getBody());
             request.setBody(parse);
         }
     }
