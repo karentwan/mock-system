@@ -8,6 +8,6 @@ package cn.karent.common;
  */
 public enum TemplateLoadMode {
 
-    STRING, FILE
+    MEM, FILE
 
 }

@@ -2,10 +2,10 @@ package cn.karent.filter.plugin.core;
 
 import cn.karent.core.ConfigController;
 import cn.karent.core.model.PluginConfig;
-import cn.karent.core.render.TemplateStorage;
+import cn.karent.core.storage.MemoryTemplateStorage;
+import cn.karent.core.storage.TemplateStorage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -18,14 +18,15 @@ docker build -t mock .
 
 服务的启动有两种模式, 分别为：
 
-- STRING-配置模式
+- MEM-内存存储模式
 
 启动命令如下：
 ```shell
-docker run -e mode=STRING -p 8079:8079 mock
+docker run -e mode=MEM -p 8079:8079 mock
 ```
 
-STRING模式表示可以通过接口配置模板，配置接口如下
+MEM模式表示可以通过接口配置模板，配置的模板将存储在内存里面。
+配置接口如下
 
 ```shell
 POST http://localhost:8079/template/config
@@ -64,6 +65,6 @@ docker run -e mode=FILE -e path=/app/data -p 8079:8079 mock
 
 FILE模式表示响应的模板放在/app/data目录下面。
 
-该模式下，不能指定响应头, 响应体只能是JSON格式。
+该模式下，只能读取文件夹下面配置的模板
 
-模板文件必须以`.ftl`格式结尾，文件名为接口名称(`/`被替换为_)，举个例子，接口/test/a/b,那么对应的文件名为`test_a_b.ftl`。
+模板文件必须以`.json`格式结尾，文件名为接口名称(`/`被替换为_)，举个例子，接口/test/a/b,那么对应的文件名为`test_a_b.json`。

@@ -1,6 +1,5 @@
 package cn.karent.common;
 
-import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -43,12 +41,12 @@ public class TemplateConfig {
         private String templatePath;
 
         /**
-         * 是否是字符串模式
+         * 是否是内存存储模式
          *
-         * @return true- string模式
+         * @return true
          */
-        public boolean isStringMode() {
-            return TemplateLoadMode.STRING.equals(mode);
+        public boolean isMemoryMode() {
+            return TemplateLoadMode.MEM.equals(mode);
         }
 
     }
@@ -58,12 +56,10 @@ public class TemplateConfig {
     public freemarker.template.Configuration configuration(Config config) throws IOException {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_33);
         log.info("启动的渲染模式: {}\t文件路径: {}", config.getMode(), config.getTemplatePath());
-        if (config.isStringMode()) {
-            configuration.setTemplateLoader(new StringTemplateLoader());
-        } else {
+        if (!config.isMemoryMode()) {
             Assert.isTrue(StringUtils.isNotBlank(config.getTemplatePath()), "文件模式下模板路径不能为空");
-            configuration.setTemplateLoader(new FileTemplateLoader(new File(config.getTemplatePath())));
         }
+        configuration.setTemplateLoader(new StringTemplateLoader());
         configuration.setEncoding(Locale.CHINA, "UTF-8");
         return configuration;
     }

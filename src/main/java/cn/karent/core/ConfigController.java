@@ -1,10 +1,11 @@
 package cn.karent.core;
 
+import cn.karent.common.Constants;
+import cn.karent.core.storage.TemplateStorage;
 import cn.karent.util.OptionalUtils;
 import cn.karent.common.Result;
 import cn.karent.common.TemplateConfig;
 import cn.karent.core.cmd.ConfigCmd;
-import cn.karent.core.render.TemplateStorage;
 import cn.karent.util.JsonUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ConfigController {
 
-    public static final String DEFAULT_RESPONSE_HEADER = "{\"content-type\": \"application/json\"}";
     public static final String CONFIG_URL = "/template/config";
 
     private final TemplateConfig.Config templateConfig;
@@ -41,8 +41,8 @@ public class ConfigController {
      */
     @PostMapping(CONFIG_URL)
     public Result<String> config(@Valid @RequestBody ConfigCmd cmd) {
-        Assert.isTrue(templateConfig.isStringMode(), "非字符串模式下不能配置模板");
-        String headerStr = OptionalUtils.ofCond(cmd.getHeaders(), StringUtils::isNotBlank).orElse(DEFAULT_RESPONSE_HEADER);
+        Assert.isTrue(templateConfig.isMemoryMode(), "非字符串模式下不能配置模板");
+        String headerStr = OptionalUtils.ofCond(cmd.getHeaders(), StringUtils::isNotBlank).orElse(Constants.DEFAULT_RESPONSE_HEADER);
         Map<String, Object> headers = JsonUtils.parseMap(headerStr);
         Map<String, String> collect = headers.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));

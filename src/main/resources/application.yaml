@@ -14,8 +14,8 @@ server:
 
 
 template:
-  # 模板: STRING -字符串  FILE -文件
-  mode: STRING
+  # 模板: MEM -字符串  FILE -文件
+  mode: MEM
   # FILE模式下存在模板的目录
   template-path: ./templates
 

@@ -1,12 +1,12 @@
 package cn.karent.core.render;
 
+import cn.karent.core.storage.MemoryTemplateStorage;
+import cn.karent.core.storage.TemplateStorage;
 import cn.karent.exception.RenderException;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.io.StringWriter;
 import java.util.Map;
 
 /**
- * 文件渲染模板
+ * 字符串渲染模板
  *
  * @author wanshengdao
  * @date 2024/6/14
@@ -22,32 +22,27 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-@ConditionalOnProperty(prefix = "template", name = "mode", havingValue = "FILE")
-public class FileRender implements Render {
+public class DefaultRender implements Render {
 
-
-    /**
-     * 文件后缀
-     */
-    public static final String FILE_SUFFIX = ".ftl";
-
-    private final Configuration configuration;
-
-    @Override
-    public Map<String, String> renderHeader(String api) {
-        return Map.of("Content-Type", "application/json");
-    }
+    private final TemplateStorage templateStorage;
 
     @Override
     public String renderContent(String api, Map<String, Object> dataModel) {
-        api = api.substring(1).replaceAll("/", "_");
-        String filePath = api + FILE_SUFFIX;
         try {
-            Template template = configuration.getTemplate(filePath);
+            Template template = templateStorage.getTemplate(api);
             StringWriter writer = new StringWriter();
             template.process(dataModel, writer);
             return writer.toString();
         } catch (IOException | TemplateException e) {
+            throw new RenderException(e);
+        }
+    }
+
+    @Override
+    public Map<String, String> renderHeader(String api) {
+        try {
+            return templateStorage.getHeaders(api);
+        } catch (IOException e) {
             throw new RenderException(e);
         }
     }
