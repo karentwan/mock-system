@@ -27,7 +27,7 @@ public class PluginManager {
     /**
      * 创建插件调用链
      *
-     * @param pluginNames 插件名称
+     * @param pluginConfigs 插件配置列表
      * @param request 请求
      * @param response 响应
      * @param chain 过滤器链
