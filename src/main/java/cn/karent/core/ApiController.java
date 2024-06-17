@@ -3,6 +3,7 @@ package cn.karent.core;
 import cn.karent.core.model.Response;
 import cn.karent.util.JsonUtils;
 import freemarker.template.TemplateException;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,7 +51,9 @@ public class ApiController {
         if (RequestMethod.POST.name().equals(request.getMethod())) {
             ServletInputStream is = request.getInputStream();
             String str = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
-            body = JsonUtils.parseMap(str);
+            if (StringUtils.isNotBlank(str)) {
+                body = JsonUtils.parseMap(str);
+            }
             // GET请求获取地址栏上的参数
         } else {
             Enumeration<String> keys = request.getParameterNames();
