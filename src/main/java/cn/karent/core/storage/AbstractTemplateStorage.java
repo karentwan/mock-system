@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractTemplateStorage implements TemplateStorage {
 
-    private final Map<String, MemoryTemplateStorage.Entry<Template>> cache = new ConcurrentHashMap<>(16);
+    private final Map<String, Config<Template>> cache = new ConcurrentHashMap<>(16);
 
     @Autowired
     private Configuration configuration;
@@ -34,15 +34,15 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      * @throws IOException
      */
     @SuppressWarnings("all")
-    private Entry<Template> getEntry(String api) throws IOException {
-        MemoryTemplateStorage.Entry<Template> template = cache.get(api);
+    private Config<Template> getEntry(String api) throws IOException {
+        Config<Template> template = cache.get(api);
         if (template == null) {
             synchronized (this) {
                 if (template == null) {
-                    MemoryTemplateStorage.Entry<String> entry = getTpl(api);
-                    Assert.notNull(entry, "未配置该模板");
-                    Template tpl = new Template(api, entry.getTemplate(), configuration);
-                    template = new MemoryTemplateStorage.Entry<>(entry.getHeaders(), tpl, entry.getPlugins());
+                    Config<String> config = getTpl(api);
+                    Assert.notNull(config, "未配置该模板");
+                    Template tpl = new Template(api, config.getTemplate(), configuration);
+                    template = new Config<>(config.getHeaders(), tpl, config.getPlugins());
                     cache.put(api, template);
                 }
             }
@@ -65,8 +65,8 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     /**
      * 获取响应模板
      *
-     * @param api
-     * @return
+     * @param api 接口名称
+     * @return 响应模板
      * @throws IOException
      */
     @Override
@@ -77,8 +77,8 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     /**
      * 获取配置的插件
      *
-     * @param api
-     * @return
+     * @param api 接口名称
+     * @return 插件列表
      * @throws IOException
      */
     @Override
@@ -96,20 +96,32 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      */
     @Override
     public void store(String api, Map<String, String> headers, String template, List<PluginConfig> plugins) {
-        Entry<String> entry = new Entry<>(headers, template, plugins);
-        store0(api, entry);
+        Config<String> config = new Config<>(headers, template, plugins);
+        store0(api, config);
         cache.remove(api);
     }
 
-    protected abstract void store0(String api, Entry<String> entry);
+    /**
+     * 子类需实现该接口对数据配置信息进行存储
+     *
+     * @param api   接口名称
+     * @param config 配置信息
+     */
+    protected abstract void store0(String api, Config<String> config);
 
+    /**
+     * 获取保存的响应模板
+     *
+     * @param api 接口名称
+     * @return 响应模板
+     */
     @Nullable
-    protected abstract Entry<String> getTpl(String api);
+    protected abstract Config<String> getTpl(String api);
 
     @Setter
     @Getter
     @Slf4j
-    protected static class Entry<T> {
+    protected static class Config<T> {
 
         /**
          * 响应头
@@ -126,7 +138,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
          */
         private T template;
 
-        public Entry(Map<String, String> headers, T template, List<PluginConfig> plugins) {
+        public Config(Map<String, String> headers, T template, List<PluginConfig> plugins) {
             this.headers = headers;
             this.template = template;
             this.plugins = plugins;

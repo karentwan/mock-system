@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MemoryTemplateStorage extends AbstractTemplateStorage {
 
 
-    private final Map<String, Entry<String>> templates = new ConcurrentHashMap<>(16);
+    private final Map<String, Config<String>> templates = new ConcurrentHashMap<>(16);
 
     /**
      * 获取末班
@@ -31,12 +31,12 @@ public class MemoryTemplateStorage extends AbstractTemplateStorage {
      */
     @Override
     @Nullable
-    protected Entry<String> getTpl(String api) {
+    protected Config<String> getTpl(String api) {
         return templates.get(api);
     }
 
     @Override
-    protected void store0(String api, Entry<String> entry) {
-        templates.put(api, entry);
+    protected void store0(String api, Config<String> config) {
+        templates.put(api, config);
     }
 }

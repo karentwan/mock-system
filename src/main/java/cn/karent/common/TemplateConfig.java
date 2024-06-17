@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-
 import java.io.IOException;
 import java.util.Locale;
 
@@ -55,7 +54,7 @@ public class TemplateConfig {
     @Bean
     public freemarker.template.Configuration configuration(Config config) throws IOException {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_33);
-        log.info("启动的渲染模式: {}\t文件路径: {}", config.getMode(), config.getTemplatePath());
+        log.info("启动的渲染模式: {}\t模板所在目录: {}", config.getMode(), config.getTemplatePath());
         if (!config.isMemoryMode()) {
             Assert.isTrue(StringUtils.isNotBlank(config.getTemplatePath()), "文件模式下模板路径不能为空");
         }

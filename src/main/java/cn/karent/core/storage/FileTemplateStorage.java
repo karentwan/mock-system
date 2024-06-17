@@ -6,7 +6,7 @@ import cn.karent.core.model.PluginConfig;
 import cn.karent.util.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.internal.util.privilegedactions.NewInstance;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,16 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
 
     public static final String TEMPLATE = "template";
 
-    private final TemplateConfig.Config config;
+    /**
+     * 模板保存的文件夹
+     */
+    private String templateDirectory;
+
+    @Autowired
+    public void setTemplateDirectory(TemplateConfig.Config config) {
+        templateDirectory = config.getTemplatePath();
+        log.info("初始化模板保存的目录: {}", templateDirectory);
+    }
 
     private String getRealApi(String api) {
         return api.substring(1).replaceAll(SLASH, "_") + FILE_SUFFIX;
@@ -76,8 +85,8 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
      */
     @Override
     @Nullable
-    protected Entry<String> getTpl(String api) {
-        String path = config.getTemplatePath() + SLASH +
+    protected Config<String> getTpl(String api) {
+        String path = templateDirectory + SLASH +
                 getRealApi(api);
         log.info("从文件加载配置的模板, path: {}", path);
         try (FileInputStream fis = new FileInputStream(path)) {
@@ -86,14 +95,14 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
             Map<String, String> headers = parseHeader(map);
             List<PluginConfig> pluginConfigs = parsePluginConfigs(map);
             String template = parseTemplate(map);
-            return new Entry<>(headers, template, pluginConfigs);
+            return new Config<>(headers, template, pluginConfigs);
         } catch (IOException e) {
             return null;
         }
     }
 
     @Override
-    protected void store0(String api, Entry<String> entry) {
+    protected void store0(String api, Config<String> config) {
         throw new UnsupportedOperationException("不支持的操作");
     }
 }
