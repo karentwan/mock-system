@@ -60,10 +60,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
         }
         List<Map<String, String>> plugins = (List<Map<String, String>>) map.get(PLUGINS);
         return plugins.stream()
-                .map(item -> {
-                    String str = JsonUtils.toString(item);
-                    return JsonUtils.parseObject(str, PluginConfig.class);
-                })
+                .map(item -> new PluginConfig(item.get("name"), item.get("config")))
                 .collect(Collectors.toList());
     }
 
