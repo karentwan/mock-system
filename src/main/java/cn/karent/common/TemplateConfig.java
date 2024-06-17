@@ -52,7 +52,7 @@ public class TemplateConfig {
 
 
     @Bean
-    public freemarker.template.Configuration configuration(Config config) throws IOException {
+    public freemarker.template.Configuration configuration(Config config) {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_33);
         log.info("启动的渲染模式: {}\t模板所在目录: {}", config.getMode(), config.getTemplatePath());
         if (!config.isMemoryMode()) {
