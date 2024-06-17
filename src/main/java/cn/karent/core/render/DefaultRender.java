@@ -1,6 +1,5 @@
 package cn.karent.core.render;
 
-import cn.karent.core.storage.MemoryTemplateStorage;
 import cn.karent.core.storage.TemplateStorage;
 import cn.karent.exception.RenderException;
 import freemarker.template.Template;
@@ -8,7 +7,6 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
