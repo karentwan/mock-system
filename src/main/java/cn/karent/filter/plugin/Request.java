@@ -18,6 +18,12 @@ import java.util.Set;
 public class Request implements Iterable<Request.HeadPair> {
 
     /**
+     * http请求方法
+     */
+    @Getter
+    private String method;
+
+    /**
      * header只读, 不允许修改
      */
     private final Map<String, String> headers;
@@ -29,10 +35,10 @@ public class Request implements Iterable<Request.HeadPair> {
     /**
      * 获取请求头
      *
-     * @param key
-     * @return
+     * @param key 请求头名称
+     * @return 请求头值
      */
-    private String getHeader(String key) {
+    public String getHeader(String key) {
         return headers.get(key);
     }
 

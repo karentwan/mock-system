@@ -65,7 +65,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
             // 创建请求对象
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             StreamUtils.copy(servletRequest.getInputStream(), bos);
-            Request req = new Request(collectRequestHeader(servletRequest), bos.toByteArray());
+            Request req = new Request(servletRequest.getMethod(), collectRequestHeader(servletRequest), bos.toByteArray());
 
             // 创建响应对象
             Response resp = new Response();

@@ -1,6 +1,7 @@
 package cn.karent.filter.plugin;
 
 import cn.karent.core.model.PluginConfig;
+import cn.karent.plugin.parse.PostParsePlugin;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +39,8 @@ public class PluginManager {
                                          HttpServletResponse response,
                                          FilterChain chain) {
         PluginChain pluginChain = new PluginChain(request, response, chain);
+        // 加入默认的请求体解析插件
+        pluginChain.addPlugin(plugins.get(PostParsePlugin.BEAN_NAME));
         if (!ObjectUtils.isEmpty(pluginConfigs)) {
             pluginConfigs.forEach(k -> {
                 String name = k.getName();
