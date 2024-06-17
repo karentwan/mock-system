@@ -56,9 +56,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     }
 
     private Map<String, String> parseHeader(Map<String, Object> map) {
-        String str = (String) map.getOrDefault(HEADERS, Constants.DEFAULT_RESPONSE_HEADER);
-        Map<String, Object> headers = JsonUtils.parseMap(str);
-        return headers.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().toString()));
+        return (Map<String, String>) map.getOrDefault(HEADERS, Constants.DEFAULT_RESPONSE_HEADER);
     }
 
     @SuppressWarnings("unchecked")
@@ -86,8 +84,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     @Override
     @Nullable
     protected Config<String> getSavedTemplate0(String api) {
-        String path = templateDirectory + SLASH +
-                getRealApi(api);
+        String path = templateDirectory + SLASH + getRealApi(api);
         log.info("从文件加载配置的模板, path: {}", path);
         try (FileInputStream fis = new FileInputStream(path)) {
             byte[] bytes = fis.readAllBytes();
