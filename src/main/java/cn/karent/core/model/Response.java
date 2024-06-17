@@ -19,8 +19,14 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
 
+    /**
+     * 模板响应头
+     */
     private Map<String, String> headers;
 
+    /**
+     * 模板响应体
+     */
     private String body;
 
 }
