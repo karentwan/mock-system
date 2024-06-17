@@ -1,7 +1,7 @@
 package cn.karent.plugin;
 
-import cn.karent.filter.plugin.core.PluginAdapter;
-import cn.karent.filter.plugin.core.Request;
+import cn.karent.filter.plugin.PluginAdapter;
+import cn.karent.filter.plugin.Request;
 import cn.karent.util.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class FormPlugin extends PluginAdapter {
 
-    public static final String BEAN_NAME = "form";
+    public static final String BEAN_NAME = "Form";
 
     @Override
     protected void processRequest(Request request) {

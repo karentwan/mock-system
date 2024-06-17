@@ -1,4 +1,4 @@
-package cn.karent.filter.plugin.core;
+package cn.karent.filter.plugin;
 
 import cn.karent.core.model.PluginConfig;
 import io.micrometer.common.util.StringUtils;

@@ -1,4 +1,4 @@
-package cn.karent.filter.plugin.core;
+package cn.karent.filter.plugin;
 
 import jakarta.servlet.ServletException;
 import java.io.IOException;
