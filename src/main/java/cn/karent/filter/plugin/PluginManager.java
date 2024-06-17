@@ -43,6 +43,7 @@ public class PluginManager {
                 String name = k.getName();
                 Plugin plugin = plugins.get(name);
                 if (ObjectUtils.isEmpty(plugin)) {
+                    log.info("该插件未曾实现: {}", name);
                     return;
                 }
                 pluginChain.addPlugin(plugin);
