@@ -37,10 +37,9 @@ public interface Configurable<C> {
         }
         Class<C> clazz = (Class<C>) GenericTypeResolver.resolveTypeArgument(getClass(), Configurable.class);
         C c = JsonUtils.parseObject(str, clazz);
-        BeanPropertyBindingResult bindError = null;
         // 对配置参数进行校验
         if (validator.supports(c.getClass())) {
-            bindError = new BeanPropertyBindingResult(c, c.getClass().getSimpleName());
+            BeanPropertyBindingResult bindError = new BeanPropertyBindingResult(c, c.getClass().getSimpleName());
             validator.validate(c, bindError);
             if (bindError.hasErrors()) {
                 List<FieldError> fieldErrors = bindError.getFieldErrors();
