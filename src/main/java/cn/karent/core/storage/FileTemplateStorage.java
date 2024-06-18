@@ -76,7 +76,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     }
 
     /**
-     * 获取末班
+     * 获取模板
      *
      * @param api 接口名称
      * @return 模板

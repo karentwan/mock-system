@@ -2,8 +2,6 @@ package cn.karent.plugin.parse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author wanshengdao
@@ -12,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ParserComposite implements Parser {
 
     private final List<Parser> parsers = new ArrayList<>(8);
-
-    private final Map<String, Parser> cache = new ConcurrentHashMap<>(16);
 
     /**
      * 添加解析器
@@ -31,14 +27,12 @@ public class ParserComposite implements Parser {
      * @return 解析器
      */
     private Parser getParser(String contentType) {
-        Parser result = cache.get(contentType);
         for (Parser parser : parsers) {
             if (parser.match(contentType)) {
-                cache.put(contentType, parser);
                 return parser;
             }
         }
-        return result;
+        return null;
     }
 
     @Override
