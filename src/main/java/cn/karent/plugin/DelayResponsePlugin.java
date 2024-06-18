@@ -1,8 +1,6 @@
 package cn.karent.plugin;
 
-import cn.karent.filter.plugin.Configurable;
 import cn.karent.filter.plugin.ConfigurablePlugin;
-import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

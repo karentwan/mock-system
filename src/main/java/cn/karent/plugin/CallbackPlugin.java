@@ -1,8 +1,6 @@
 package cn.karent.plugin;
 
-import cn.karent.filter.plugin.Configurable;
 import cn.karent.filter.plugin.ConfigurablePlugin;
-import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Request;
 import cn.karent.util.JsonUtils;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -30,8 +28,8 @@ import java.util.concurrent.TimeUnit;
  * @author wanshengdao
  * @date 2024/6/17
  */
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 @Component(CallbackPlugin.BEAN_NAME)
 public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 

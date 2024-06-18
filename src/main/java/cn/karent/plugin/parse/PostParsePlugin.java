@@ -17,8 +17,8 @@ import java.util.List;
  * @date 2024/6/16
  */
 @Slf4j
-@Component(PostParsePlugin.BEAN_NAME)
 @RequiredArgsConstructor
+@Component(PostParsePlugin.BEAN_NAME)
 public class PostParsePlugin extends PluginAdapter {
 
     public static final String BEAN_NAME = "PostParse";
