@@ -44,7 +44,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
 
     private final List<HandlerMapping> handlerMappings;
 
-    private final PluginManager pluginManager;
+    private final PluginChainFactory pluginChainFactory;
 
     private final TemplateStorage templateStorage;
 
@@ -60,7 +60,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
         try {
             // 构造插件调用链
             List<PluginConfig> plugins = templateStorage.getPlugins(servletRequest.getRequestURI());
-            PluginChain pluginChain = pluginManager.createPluginChain(plugins, servletRequest, servletResponse, filterChain);
+            PluginChain pluginChain = pluginChainFactory.createPluginChain(plugins, servletRequest, servletResponse, filterChain);
 
             // 创建请求对象
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

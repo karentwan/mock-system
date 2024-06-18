@@ -21,7 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class PluginManager {
+public class PluginChainFactory {
 
     private final Map<String, Plugin> plugins;
 

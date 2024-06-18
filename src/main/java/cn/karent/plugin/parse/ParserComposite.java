@@ -11,9 +11,13 @@ public class ParserComposite implements Parser {
 
     private final List<Parser> parsers = new ArrayList<>(8);
 
-    public ParserComposite() {
-        parsers.add(new JsonParser());
-        parsers.add(new UrlEncodedFormParser());
+    /**
+     * 添加解析器
+     *
+     * @param parser 解析器
+     */
+    public void addParser(Parser parser) {
+        parsers.add(parser);
     }
 
     @Override
@@ -33,6 +37,6 @@ public class ParserComposite implements Parser {
                 return parser.parse(contentType, src);
             }
         }
-        return src;
+        return null;
     }
 }

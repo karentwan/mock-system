@@ -6,9 +6,8 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.Assert;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Post请求体解析插件
@@ -25,15 +24,15 @@ public class PostParsePlugin extends PluginAdapter {
 
     public static final String CONTENT_TYPE = "Content-Type";
 
-    private final Parser parser = new ParserComposite();
+    private final Parser parser = ParserFactory.createParser();
 
     /**
-     * 是否应该过滤, 只处理POST请求
+     * 只解析POST请求
      *
      * @param request 请求
      * @return true/false
      */
-    private boolean shouldFilter(Request request) {
+    private boolean shouldParse(Request request) {
         String method = request.getMethod();
         return !"post".equalsIgnoreCase(method);
     }
@@ -51,12 +50,13 @@ public class PostParsePlugin extends PluginAdapter {
 
     @Override
     protected void processRequest(Request request) {
-        if (shouldFilter(request)) {
+        if (!shouldParse(request)) {
             return;
         }
         String contentType = getContentType(request);
         if (parser.match(contentType)) {
             byte[] parse = parser.parse(contentType, request.getBody());
+            Assert.notNull(parse, String.format("不支持该内容类型: %s", contentType));
             request.setBody(parse);
         }
     }
