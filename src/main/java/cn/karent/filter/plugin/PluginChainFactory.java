@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-
+import org.springframework.validation.SmartValidator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +24,8 @@ import java.util.Map;
 public class PluginChainFactory {
 
     private final Map<String, Plugin> plugins;
+
+    private final SmartValidator validator;
 
     /**
      * 创建插件调用链
@@ -55,7 +57,7 @@ public class PluginChainFactory {
                     return;
                 }
                 if (plugin instanceof Configurable<?> configurable) {
-                    configurable.configure(k.getConfig());
+                    configurable.configure(k.getConfig(), validator);
                 }
             });
         }
