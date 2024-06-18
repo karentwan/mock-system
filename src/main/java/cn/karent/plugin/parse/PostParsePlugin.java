@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
 import java.util.List;
 
 /**
@@ -22,8 +23,6 @@ public class PostParsePlugin extends PluginAdapter {
 
     public static final String BEAN_NAME = "PostParse";
 
-    public static final String CONTENT_TYPE = "Content-Type";
-
     private final Parser parser = ParserFactory.createParser();
 
     /**
@@ -34,7 +33,7 @@ public class PostParsePlugin extends PluginAdapter {
      */
     private boolean shouldParse(Request request) {
         String method = request.getMethod();
-        return !"post".equalsIgnoreCase(method);
+        return "post".equalsIgnoreCase(method);
     }
 
     private String getContentType(Request request) {
@@ -54,11 +53,9 @@ public class PostParsePlugin extends PluginAdapter {
             return;
         }
         String contentType = getContentType(request);
-        if (parser.match(contentType)) {
-            byte[] parse = parser.parse(contentType, request.getBody());
-            Assert.notNull(parse, String.format("不支持该内容类型: %s", contentType));
-            request.setBody(parse);
-        }
+        Assert.isTrue(parser.match(contentType), String.format("系统暂不支持该内容类型: %s", contentType));
+        byte[] parse = parser.parse(contentType, request.getBody());
+        request.setBody(parse);
     }
 
 }
