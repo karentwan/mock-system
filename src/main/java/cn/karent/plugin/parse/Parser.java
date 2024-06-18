@@ -20,7 +20,7 @@ public interface Parser {
     /**
      * 解析成键值对格式的字节
      *
-     * @param contentType
+     * @param contentType 内容类型
      * @param src         请求体
      * @return 键值对
      */
