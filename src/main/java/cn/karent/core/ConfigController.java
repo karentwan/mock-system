@@ -38,7 +38,7 @@ public class ConfigController {
     @PostMapping(CONFIG_URL)
     public Result<String> config(@Valid @RequestBody ConfigCmd cmd) {
         Assert.isTrue(templateConfig.isMemoryMode(), "非字符串模式下不能配置模板");
-        Map<String, String> collect = Optional.of(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
+        Map<String, String> collect = Optional.ofNullable(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
         templateStorage.store(cmd.getApi(), collect, cmd.getTemplate(), cmd.getPlugins());
         return Result.ok();
     }
