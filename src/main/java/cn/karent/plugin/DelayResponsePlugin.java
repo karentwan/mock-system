@@ -1,6 +1,7 @@
 package cn.karent.plugin;
 
 import cn.karent.filter.plugin.Configurable;
+import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -23,16 +24,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RequiredArgsConstructor
 @Component(DelayResponsePlugin.BEAN_NAME)
-public class DelayResponsePlugin extends PluginAdapter implements Configurable<DelayResponsePlugin.Config> {
+public class DelayResponsePlugin extends ConfigurablePlugin<DelayResponsePlugin.Config> {
 
     public static final String BEAN_NAME = "DelayResponse";
-
-    private Config config;
-
-    @Override
-    public void configure0(Config config) {
-        this.config = config;
-    }
 
     @Override
     protected void processResponse(Response response) {

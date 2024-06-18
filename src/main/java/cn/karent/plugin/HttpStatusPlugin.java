@@ -1,6 +1,7 @@
 package cn.karent.plugin;
 
 import cn.karent.filter.plugin.Configurable;
+import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Response;
 import jakarta.validation.constraints.NotBlank;
@@ -22,16 +23,9 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Component(HttpStatusPlugin.BEAN_NAME)
-public class HttpStatusPlugin extends PluginAdapter implements Configurable<HttpStatusPlugin.Config> {
+public class HttpStatusPlugin extends ConfigurablePlugin<HttpStatusPlugin.Config> {
 
     public static final String BEAN_NAME = "HttpStatus";
-
-    private Config config;
-
-    @Override
-    public void configure0(Config config) {
-        this.config = config;
-    }
 
     private HttpStatus getHttpStatusFrom(int status) {
         return Stream.of(HttpStatus.values())

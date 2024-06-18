@@ -1,6 +1,7 @@
 package cn.karent.plugin;
 
 import cn.karent.filter.plugin.Configurable;
+import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Request;
 import cn.karent.util.JsonUtils;
@@ -32,20 +33,13 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 @Component(CallbackPlugin.BEAN_NAME)
-public class CallbackPlugin extends PluginAdapter implements Configurable<CallbackPlugin.Config> {
+public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     public static final String BEAN_NAME = "Callback";
 
     private final RestTemplate restTemplate;
 
     private final ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(1);
-
-    private Config config;
-
-    @Override
-    public void configure0(Config config) {
-        this.config = config;
-    }
 
     /**
      * 校验参数配置是否有效
