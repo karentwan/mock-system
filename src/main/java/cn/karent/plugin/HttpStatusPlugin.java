@@ -3,11 +3,14 @@ package cn.karent.plugin;
 import cn.karent.filter.plugin.Configurable;
 import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Response;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -49,9 +52,11 @@ public class HttpStatusPlugin extends PluginAdapter implements Configurable<Http
 
     @Getter
     @Setter
+    @Validated
     public static class Config {
 
-        private int status;
+        @NotBlank
+        private Integer status;
 
     }
 

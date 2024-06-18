@@ -42,6 +42,11 @@ public class CallbackPlugin extends PluginAdapter implements Configurable<Callba
 
     private Config config;
 
+    @Override
+    public void configure0(Config config) {
+        this.config = config;
+    }
+
     /**
      * 校验参数配置是否有效
      *
@@ -70,11 +75,6 @@ public class CallbackPlugin extends PluginAdapter implements Configurable<Callba
                 log.info("status code: {}\tresponse content:{}", statusCode, body);
             }
         }, intervalTime, unit);
-    }
-
-    @Override
-    public void configure0(Config config) {
-        this.config = config;
     }
 
     @Getter
