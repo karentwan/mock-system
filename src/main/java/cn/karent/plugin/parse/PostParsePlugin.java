@@ -53,7 +53,7 @@ public class PostParsePlugin extends PluginAdapter {
             return;
         }
         String contentType = getContentType(request);
-        Assert.isTrue(parser.match(contentType), String.format("系统暂不支持该内容类型: %s", contentType));
+        Assert.isTrue(parser.support(contentType), String.format("系统暂不支持该内容类型: %s", contentType));
         byte[] parse = parser.parse(contentType, request.getBody());
         request.setBody(parse);
     }

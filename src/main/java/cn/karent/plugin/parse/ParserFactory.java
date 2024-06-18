@@ -17,6 +17,7 @@ public class ParserFactory {
         composite.addParser(new JsonParser());
         composite.addParser(new UrlEncodedFormParser());
         composite.addParser(new MultipartFormParser());
+        composite.addParser(new TextPlainParser());
         return composite;
     }
 

@@ -9,12 +9,12 @@ package cn.karent.plugin.parse;
 public interface Parser {
 
     /**
-     * 匹配
+     * 解析器是否支持该内容
      *
      * @param contentType 请求的格式
      * @return true/false
      */
-    boolean match(String contentType);
+    boolean support(String contentType);
 
 
     /**

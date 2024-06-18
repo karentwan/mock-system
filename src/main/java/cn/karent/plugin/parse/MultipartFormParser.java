@@ -22,7 +22,7 @@ import java.util.Map;
 public class MultipartFormParser implements Parser {
 
     @Override
-    public boolean match(String contentType) {
+    public boolean support(String contentType) {
         return contentType.startsWith(MediaType.MULTIPART_FORM_DATA_VALUE);
     }
 
@@ -68,7 +68,7 @@ public class MultipartFormParser implements Parser {
             }
             return JsonUtils.toBytes(content);
         } catch (FileUploadException e) {
-            log.error("文件异常: ", e);
+            log.error("异常: ", e);
             throw new IllegalStateException(e);
         }
     }

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class UrlEncodedFormParser implements Parser{
 
     @Override
-    public boolean match(String contentType) {
+    public boolean support(String contentType) {
         return MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(contentType);
     }
 

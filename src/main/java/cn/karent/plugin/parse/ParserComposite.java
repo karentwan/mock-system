@@ -28,7 +28,7 @@ public class ParserComposite implements Parser {
      */
     private Parser getParser(String contentType) {
         for (Parser parser : parsers) {
-            if (parser.match(contentType)) {
+            if (parser.support(contentType)) {
                 return parser;
             }
         }
@@ -36,7 +36,7 @@ public class ParserComposite implements Parser {
     }
 
     @Override
-    public boolean match(String contentType) {
+    public boolean support(String contentType) {
         return getParser(contentType) != null;
     }
 
