@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +67,13 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
         }
         List<Map<String, String>> plugins = (List<Map<String, String>>) map.get(PLUGINS);
         return plugins.stream()
-                .map(item -> new PluginConfig(item.get("name"), item.get("config")))
+                .map(plugin -> {
+                    String config = null;
+                    if (plugin.containsKey("config")) {
+                        config = JsonUtils.toString(plugin.get("config"));
+                    }
+                    return new PluginConfig(plugin.get("name"), config);
+                })
                 .collect(Collectors.toList());
     }
 
