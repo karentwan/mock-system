@@ -31,9 +31,9 @@ public class PluginChainFactory {
      * 创建插件调用链
      *
      * @param pluginConfigs 插件配置列表
-     * @param request 请求
-     * @param response 响应
-     * @param chain 过滤器链
+     * @param request       请求
+     * @param response      响应
+     * @param chain         过滤器链
      * @return 插件调用链
      */
     public PluginChain createPluginChain(List<PluginConfig> pluginConfigs,

@@ -27,8 +27,8 @@ public interface Configurable<C> {
     /**
      * 设置配置信息
      *
-     * @param str
-     * @param validator
+     * @param str       字符串格式的参数
+     * @param validator POJO类校验器
      */
     @SuppressWarnings("unchecked")
     default void configure(String str, SmartValidator validator) {

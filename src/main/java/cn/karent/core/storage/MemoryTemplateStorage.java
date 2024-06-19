@@ -24,7 +24,7 @@ public class MemoryTemplateStorage extends AbstractTemplateStorage {
     private final Map<String, Config<String>> templates = new ConcurrentHashMap<>(16);
 
     /**
-     * 获取末班
+     * 获取模板
      *
      * @param api 接口名称
      * @return 模板
