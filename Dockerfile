@@ -15,7 +15,7 @@ RUN mkdir /app/config
 EXPOSE 8079
 
 # 设置环境变量
-ENV mode='STRING'
+ENV mode='MEM'
 ENV path="/app/data"
 
 
