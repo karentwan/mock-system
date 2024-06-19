@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -65,14 +66,14 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
         if (!map.containsKey(PLUGINS)) {
             return null;
         }
-        List<Map<String, String>> plugins = (List<Map<String, String>>) map.get(PLUGINS);
+        List<Map<String, Object>> plugins = (List<Map<String, Object>>) map.get(PLUGINS);
         return plugins.stream()
                 .map(plugin -> {
                     String config = null;
                     if (plugin.containsKey("config")) {
                         config = JsonUtils.toString(plugin.get("config"));
                     }
-                    return new PluginConfig(plugin.get("name"), config);
+                    return new PluginConfig(plugin.get("name").toString(), config);
                 })
                 .collect(Collectors.toList());
     }
@@ -92,7 +93,12 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     protected Config<String> getSavedTemplate0(String api) {
         String path = templateDirectory + SLASH + getRealApi(api);
         log.info("从文件加载配置的模板, path: {}", path);
-        try (FileInputStream fis = new FileInputStream(path)) {
+        File file = new File(path);
+        if (!file.exists()) {
+            log.debug("文件不存在");
+            return null;
+        }
+        try (FileInputStream fis = new FileInputStream(file)) {
             byte[] bytes = fis.readAllBytes();
             Map<String, Object> map = JsonUtils.parseMap(new String(bytes, StandardCharsets.UTF_8));
             Map<String, String> headers = parseHeader(map);
