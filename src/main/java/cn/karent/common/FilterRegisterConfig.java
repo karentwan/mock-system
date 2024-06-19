@@ -19,7 +19,7 @@ public class FilterRegisterConfig {
     public FilterRegistrationBean<ServletRequestPathFilter> servletRequestPathFilter() {
         FilterRegistrationBean<ServletRequestPathFilter> bean = new FilterRegistrationBean<>();
         bean.setFilter(new ServletRequestPathFilter());
-        bean.setOrder(0);
+        bean.setOrder(1);
         return bean;
     }
 

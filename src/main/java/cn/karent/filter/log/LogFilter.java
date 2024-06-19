@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@Order(value = Ordered.HIGHEST_PRECEDENCE)
+@Order(value = 0)
 public class LogFilter extends OncePerRequestFilter {
 
     @Override

@@ -32,7 +32,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-@Order(1)
+@Order(2)
 public class PluginCompositeFilter extends OncePerRequestFilter {
 
     /**
