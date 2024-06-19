@@ -15,8 +15,9 @@ RUN mkdir /app/config
 EXPOSE 8079
 
 # 设置环境变量
-ENV mode='MEM'
-ENV path="/app/data"
+ENV mode=MEM
+ENV path=/app/data
+ENV logLevel=DEBUG
 
 
 # 创建文件夹
@@ -24,4 +25,4 @@ RUN mkdir ${path}
 
 
 # 定义应用程序的启动命令
-ENTRYPOINT ["sh","-c","java -Dtemplate.mode=${mode} -Dtemplate.template-path=${path} -jar mock-system.jar"]
+ENTRYPOINT ["sh","-c","java -Dtemplate.mode=${mode} -Dtemplate.template-path=${path} -Dlogging.level.cn.karent=${logLevel} -jar mock-system.jar"]
