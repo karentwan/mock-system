@@ -3,6 +3,8 @@ package cn.karent.plugin;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Response;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +48,8 @@ public class HttpStatusPlugin extends ConfigurablePlugin<HttpStatusPlugin.Config
     @Validated
     public static class Config {
 
-        @NotBlank
+        @Positive
+        @NotNull
         private Integer status;
 
     }

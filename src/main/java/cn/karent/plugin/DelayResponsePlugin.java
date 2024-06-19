@@ -5,6 +5,7 @@ import cn.karent.filter.plugin.Response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -42,6 +43,7 @@ public class DelayResponsePlugin extends ConfigurablePlugin<DelayResponsePlugin.
     public static class Config {
 
 
+        @Positive
         @NotNull
         private Integer delayTime;
 
