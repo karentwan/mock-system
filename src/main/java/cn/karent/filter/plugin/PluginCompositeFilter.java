@@ -78,14 +78,14 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
             servletResponse.setStatus(status.value());
 
             // 请求头写回
-            Map<String, String> respHeaders = resp.getHeaders();
+            Map<String, String> respHeaders = Optional.ofNullable(resp.getHeaders()).orElse(new HashMap<>(4));
             respHeaders.forEach(servletResponse::addHeader);
 
             // 响应内容写回
             byte[] bytes = Optional.ofNullable(resp.getBody()).orElse(new byte[0]);
             StreamUtils.copy(bytes, servletResponse.getOutputStream());
         } catch (Exception e) {
-            processExceptionWithGlobalExceptionHandler(servletRequest, servletResponse, e);
+            processWithGlobalExceptionHandler(servletRequest, servletResponse, e);
         }
     }
 
@@ -96,7 +96,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
      * @param response 响应
      * @param e        异常
      */
-    private void processExceptionWithGlobalExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) throws ServletException {
+    private void processWithGlobalExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception e) throws ServletException {
         HandlerExecutionChain handler = null;
         if (!CollectionUtils.isEmpty(this.handlerMappings)) {
             for (HandlerMapping mapping : this.handlerMappings) {
