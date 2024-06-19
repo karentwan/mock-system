@@ -44,7 +44,7 @@ public interface Configurable<C> {
             if (bindError.hasErrors()) {
                 List<FieldError> fieldErrors = bindError.getFieldErrors();
                 String msg = fieldErrors.stream().map(item -> item.getField() + ":" + item.getDefaultMessage()).collect(Collectors.joining(";"));
-                throw new IllegalArgumentException(String.format("请检查插件的配置文件是否配置正常, 错误信息: %s", msg));
+                throw new IllegalArgumentException(String.format("字段配置错误, 错误信息为: %s", msg));
             }
         }
         configure0(c);

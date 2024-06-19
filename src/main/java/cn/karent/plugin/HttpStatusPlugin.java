@@ -2,7 +2,6 @@ package cn.karent.plugin;
 
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Response;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
