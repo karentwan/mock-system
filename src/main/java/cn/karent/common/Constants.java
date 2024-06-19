@@ -13,5 +13,5 @@ public class Constants {
     /**
      * 默认模板
      */
-    public static final String DEFAULT_TEMPLATE = "{\"greeting\": \"honey, did you forget configure template?\"}";
+    public static final String DEFAULT_TEMPLATE = "honey, did you forget configure template?";
 }
