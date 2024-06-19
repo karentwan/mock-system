@@ -4,11 +4,12 @@
     "content-type": "application/json"
   },
   "template": "<#if header.token??> {\"hello\": \"wan\", \"param\": \"${body.a}\", \"token\": \"${header.token}\", \"content_type\": \"${header.contentType}\"} <#else> {\"hello\": \"no token\", \"param\": \"${body.a}\", \"random\": \"${F.random.nextInt()}\"} </#if>",
-  "plugins":
-  [
+  "plugins": [
     {
       "name": "HttpStatus",
-      "config": "{\"status\": 400 }"
+      "config": {
+        "status": 400
+      }
     }
   ]
 }
