@@ -79,7 +79,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
 
             // 请求头写回
             Map<String, String> respHeaders = Optional.ofNullable(resp.getHeaders()).orElse(new HashMap<>(4));
-            respHeaders.forEach(servletResponse::addHeader);
+            respHeaders.forEach(servletResponse::setHeader);
 
             // 响应内容写回
             byte[] bytes = Optional.ofNullable(resp.getBody()).orElse(new byte[0]);
