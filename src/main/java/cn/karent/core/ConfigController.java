@@ -1,21 +1,25 @@
 package cn.karent.core;
 
 import cn.karent.common.Constants;
+import cn.karent.core.cmd.PluginConfig;
 import cn.karent.core.storage.TemplateStorage;
 import cn.karent.common.Result;
 import cn.karent.common.TemplateConfig;
 import cn.karent.core.cmd.ConfigCmd;
+import cn.karent.util.JsonUtils;
 import cn.karent.util.OptionalUtils;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wanshengdao
@@ -42,7 +46,17 @@ public class ConfigController {
         Assert.isTrue(templateConfig.isMemoryMode(), "非字符串模式下不能配置模板");
         Map<String, String> collect = Optional.ofNullable(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
         String template = OptionalUtils.ofCond(cmd.getTemplate(), StringUtils::isNotBlank).orElse(Constants.DEFAULT_TEMPLATE);
-        templateStorage.store(cmd.getApi(), collect, template, cmd.getPlugins());
+        List<PluginConfig> plugins = Optional.ofNullable(cmd.getPlugins()).orElse(new ArrayList<>());
+        List<cn.karent.core.model.PluginConfig> encodedPlugins = plugins.stream()
+                .map(plugin -> {
+                    String config = null;
+                    if (!Objects.isNull(plugin.getConfig())) {
+                        config = JsonUtils.toString(plugin.getConfig());
+                    }
+                    return new cn.karent.core.model.PluginConfig(plugin.getName(), config);
+                })
+                .collect(Collectors.toList());
+        templateStorage.store(cmd.getApi(), collect, template, encodedPlugins);
         return Result.ok();
     }
 

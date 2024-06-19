@@ -1,6 +1,5 @@
 package cn.karent.core.cmd;
 
-import cn.karent.core.model.PluginConfig;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
