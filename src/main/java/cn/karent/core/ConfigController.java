@@ -5,6 +5,8 @@ import cn.karent.core.storage.TemplateStorage;
 import cn.karent.common.Result;
 import cn.karent.common.TemplateConfig;
 import cn.karent.core.cmd.ConfigCmd;
+import cn.karent.util.OptionalUtils;
+import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +41,8 @@ public class ConfigController {
     public Result<String> config(@Valid @RequestBody ConfigCmd cmd) {
         Assert.isTrue(templateConfig.isMemoryMode(), "非字符串模式下不能配置模板");
         Map<String, String> collect = Optional.ofNullable(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
-        templateStorage.store(cmd.getApi(), collect, cmd.getTemplate(), cmd.getPlugins());
+        String template = OptionalUtils.ofCond(cmd.getTemplate(), StringUtils::isNotBlank).orElse(Constants.DEFAULT_TEMPLATE);
+        templateStorage.store(cmd.getApi(), collect, template, cmd.getPlugins());
         return Result.ok();
     }
 

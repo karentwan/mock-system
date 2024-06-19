@@ -38,7 +38,6 @@ public class ConfigCmd {
     /**
      * 模板响应
      */
-    @NotBlank
     private String template;
 
     /**

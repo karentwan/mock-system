@@ -55,6 +55,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
         return api.substring(1).replaceAll(SLASH, "_") + FILE_SUFFIX;
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, String> parseHeader(Map<String, Object> map) {
         return (Map<String, String>) map.getOrDefault(HEADERS, Constants.DEFAULT_RESPONSE_HEADER);
     }
@@ -72,7 +73,7 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     }
 
     private String parseTemplate(Map<String, Object> map) {
-        return ((String) map.get(TEMPLATE));
+        return (String) map.getOrDefault(TEMPLATE, Constants.DEFAULT_TEMPLATE);
     }
 
     /**
