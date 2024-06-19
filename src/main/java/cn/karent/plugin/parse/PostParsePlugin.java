@@ -44,7 +44,7 @@ public class PostParsePlugin extends PluginAdapter {
                 return value;
             }
         }
-        return null;
+        throw new IllegalArgumentException("请上送content-type请求头");
     }
 
     @Override
