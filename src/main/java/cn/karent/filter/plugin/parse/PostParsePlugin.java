@@ -1,4 +1,4 @@
-package cn.karent.plugin.parse;
+package cn.karent.filter.plugin.parse;
 
 import cn.karent.filter.plugin.PluginAdapter;
 import cn.karent.filter.plugin.Request;

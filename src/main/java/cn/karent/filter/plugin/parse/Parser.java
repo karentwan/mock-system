@@ -1,4 +1,4 @@
-package cn.karent.plugin.parse;
+package cn.karent.filter.plugin.parse;
 
 /**
  * 请求体解析接口

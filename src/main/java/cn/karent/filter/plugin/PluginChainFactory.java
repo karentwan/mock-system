@@ -1,7 +1,7 @@
 package cn.karent.filter.plugin;
 
 import cn.karent.core.model.PluginConfig;
-import cn.karent.plugin.parse.PostParsePlugin;
+import cn.karent.filter.plugin.parse.PostParsePlugin;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
