@@ -44,8 +44,14 @@ public class ConfigController {
     @PostMapping(CONFIG_URL)
     public Result<String> config(@Valid @RequestBody ConfigCmd cmd) {
         Assert.isTrue(templateConfig.isMemoryMode(), "非字符串模式下不能配置模板");
-        Map<String, String> collect = Optional.ofNullable(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
-        String template = OptionalUtils.ofCond(cmd.getTemplate(), StringUtils::isNotBlank).orElse(Constants.DEFAULT_TEMPLATE);
+        Map<String, String> headers = Optional.ofNullable(cmd.getHeaders()).orElse(Constants.DEFAULT_RESPONSE_HEADER);
+        String template = Optional.ofNullable(cmd.getTemplate()).map(obj -> {
+            if (obj instanceof String str) {
+                return str;
+            } else {
+                return JsonUtils.toString(obj);
+            }
+        }).orElse(Constants.DEFAULT_TEMPLATE);
         List<PluginConfig> plugins = Optional.ofNullable(cmd.getPlugins()).orElse(new ArrayList<>());
         List<cn.karent.core.model.PluginConfig> encodedPlugins = plugins.stream()
                 .map(plugin -> {
@@ -56,7 +62,7 @@ public class ConfigController {
                     return new cn.karent.core.model.PluginConfig(plugin.getName(), config);
                 })
                 .collect(Collectors.toList());
-        templateStorage.store(cmd.getApi(), collect, template, encodedPlugins);
+        templateStorage.store(cmd.getApi(), headers, template, encodedPlugins);
         return Result.ok();
     }
 

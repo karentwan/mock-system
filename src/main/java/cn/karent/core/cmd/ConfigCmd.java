@@ -37,7 +37,7 @@ public class ConfigCmd {
     /**
      * 模板响应
      */
-    private String template;
+    private Object template;
 
     /**
      * 插件
