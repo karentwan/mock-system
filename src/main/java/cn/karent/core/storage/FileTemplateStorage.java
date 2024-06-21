@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -79,7 +80,14 @@ public class FileTemplateStorage extends AbstractTemplateStorage {
     }
 
     private String parseTemplate(Map<String, Object> map) {
-        return (String) map.getOrDefault(TEMPLATE, Constants.DEFAULT_TEMPLATE);
+        Object template = map.get(TEMPLATE);
+        return Optional.ofNullable(template).map(t -> {
+            if (t instanceof String str) {
+                return str;
+            } else {
+                return JsonUtils.toString(t);
+            }
+        }).orElse(Constants.DEFAULT_TEMPLATE);
     }
 
     /**
