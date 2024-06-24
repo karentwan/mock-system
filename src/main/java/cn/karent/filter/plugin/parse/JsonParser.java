@@ -11,8 +11,7 @@ public class JsonParser implements Parser{
 
     @Override
     public boolean support(String contentType) {
-        return MediaType.APPLICATION_JSON_VALUE.equals(contentType)
-                || MediaType.APPLICATION_JSON_UTF8_VALUE.equals(contentType);
+        return contentType.startsWith(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Override
