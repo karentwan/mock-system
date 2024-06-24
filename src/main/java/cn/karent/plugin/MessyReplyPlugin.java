@@ -24,10 +24,10 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Component(RandomResponsePlugin.BEAN_NAME)
-public class RandomResponsePlugin extends ConfigurablePlugin<RandomResponsePlugin.Config> {
+@Component(MessyReplyPlugin.BEAN_NAME)
+public class MessyReplyPlugin extends ConfigurablePlugin<MessyReplyPlugin.Config> {
 
-    public static final String BEAN_NAME = "RandomResponse";
+    public static final String BEAN_NAME = "MessyReply";
 
     private void response(Map<String, Object> map, Map<String, Object> result) {
         map.forEach((k, v) -> {

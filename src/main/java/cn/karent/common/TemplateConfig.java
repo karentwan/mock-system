@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
-import java.io.IOException;
 import java.util.Locale;
 
 /**

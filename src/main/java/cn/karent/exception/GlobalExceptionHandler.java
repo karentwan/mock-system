@@ -1,8 +1,6 @@
 package cn.karent.exception;
 
 import cn.karent.common.Result;
-import freemarker.core.InvalidReferenceException;
-import freemarker.template.TemplateNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
