@@ -10,7 +10,7 @@ management:
       exposure:
         include: info,health,prometheus
 server:
-  port: 8079
+  port: 8080
 
 
 template:
@@ -19,4 +19,7 @@ template:
   # FILE模式下存在模板的目录
   template-path: ./templates
 
+logging:
+  level:
+    cn.karent: DEBUG
 
