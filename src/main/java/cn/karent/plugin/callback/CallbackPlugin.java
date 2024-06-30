@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,8 +40,6 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     private final RestTemplate restTemplate;
 
-    private final InterceptorCustomizer customizer;
-
     private final ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(1);
 
     /**
@@ -63,8 +60,6 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
         int intervalTime = Optional.ofNullable(config.getIntervalTime()).orElse(10);
         TimeUnit unit = Optional.ofNullable(config.getUnit()).orElse(TimeUnit.SECONDS);
         scheduled.schedule(() -> {
-            // 给restTemplate设置拦截器
-            customizer.customize(restTemplate, config.getInterceptors());
             if ("get".equalsIgnoreCase(config.getMethod())) {
                 log.info("响应结果: {}", restTemplate.getForObject(config.getUrl(), String.class));
             } else {
@@ -72,7 +67,8 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
                 Map<String, String> headerMap = Optional.ofNullable(config.getHeaders())
                         .orElse(Constants.DEFAULT_RESPONSE_HEADER);
                 headerMap.forEach(headers::add);
-                HttpEntity<String> requestEntity = new HttpEntity<>(config.getBody(), headers);
+                ConfiguredRequest configuredRequest = new ConfiguredRequest(config.getBody(), config.getInterceptor());
+                HttpEntity<ConfiguredRequest> requestEntity = new HttpEntity<>(configuredRequest, headers);
                 ResponseEntity<String> entity = restTemplate.postForEntity(config.getUrl(), requestEntity, String.class);
                 HttpStatusCode statusCode = entity.getStatusCode();
                 String body = entity.getBody();
@@ -122,7 +118,7 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
         /**
          * 回调拦截器列表, 可以在拦截器对请求体进行加签和加密
          */
-        private List<String> interceptors;
+        private Map<String, Object> interceptor;
 
     }
 

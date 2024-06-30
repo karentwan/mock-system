@@ -1,11 +1,10 @@
 package cn.karent.plugin.callback.interceptor;
 
-import cn.karent.plugin.callback.CallbackInterceptor;
+import cn.karent.plugin.callback.http.CallbackInterceptor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 @Component(WeXinSignInterceptor.BEAN_NAME)
-public class WeXinSignInterceptor implements ClientHttpRequestInterceptor, CallbackInterceptor {
+public class WeXinSignInterceptor implements CallbackInterceptor {
 
     public static final String BEAN_NAME = "WeXinSignInterceptor";
 
