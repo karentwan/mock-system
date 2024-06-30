@@ -148,7 +148,7 @@ POST http://localhost:8079/template/config
 
 ```
 
-使用上面的配置，当我们访问http://localhost:8079/test时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
+使用上面的配置，当我们访问`http://localhost:8079/test` 时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
 
 上面的模板配置中，`plugins`是配置的插件列表，该参数配置的多个插件会以责任链的方式依次执行。
 
@@ -159,7 +159,7 @@ POST http://localhost:8079/template/config
 
 如果只想要改变请求、响应二者之一，可以继承`cn.karent.filter.plugin.PluginAdapter`接口，并实现里面的`processRequest(Request)`方法或者`processResponse(Response)`方法。
 
-如果自定义插件有自己的参数（如上面配置Http状态码），那么需要实现`cn.karent.filter.plugin.Configurable`接口，并重写它的方法：
+如果自定义插件有自己的参数（如上面配置Http状态码），那么需要实现`cn.karent.common.Configurable`接口，并重写它的方法：
 >  void configure0(C c);
 
 该方法会将参数传递给插件，具体的例子可以参考：`cn.karent.plugin.HttpStatusPlugin`类的实现。

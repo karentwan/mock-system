@@ -62,10 +62,9 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
         }
         int intervalTime = Optional.ofNullable(config.getIntervalTime()).orElse(10);
         TimeUnit unit = Optional.ofNullable(config.getUnit()).orElse(TimeUnit.SECONDS);
-        // 加载拦截器
-        customizer.customize(restTemplate, config.getInterceptors());
         scheduled.schedule(() -> {
-            // request template设置拦截器
+            // 给restTemplate设置拦截器
+            customizer.customize(restTemplate, config.getInterceptors());
             if ("get".equalsIgnoreCase(config.getMethod())) {
                 log.info("响应结果: {}", restTemplate.getForObject(config.getUrl(), String.class));
             } else {

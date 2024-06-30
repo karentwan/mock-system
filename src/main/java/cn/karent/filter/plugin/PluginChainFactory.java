@@ -1,5 +1,6 @@
 package cn.karent.filter.plugin;
 
+import cn.karent.common.Configurable;
 import cn.karent.core.model.PluginConfig;
 import cn.karent.filter.plugin.parse.PostParsePlugin;
 import io.micrometer.common.util.StringUtils;

@@ -23,6 +23,12 @@ public class InterceptorCustomizer {
 
     private final Map<String, CallbackInterceptor> interceptors;
 
+    /**
+     * restTemplate设置拦截器
+     *
+     * @param restTemplate     restTemplate
+     * @param interceptorNames 拦截器列表
+     */
     public void customize(RestTemplate restTemplate, List<String> interceptorNames) {
         List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
         // 清空原有拦截器列表
