@@ -1,5 +1,6 @@
 package cn.karent.plugin;
 
+import cn.karent.common.PluginComponent;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Response;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @date 2024/6/17
  */
 @Slf4j
-@Component(HttpStatusPlugin.BEAN_NAME)
+@PluginComponent(HttpStatusPlugin.BEAN_NAME)
 public class HttpStatusPlugin extends ConfigurablePlugin<HttpStatusPlugin.Config> {
 
     public static final String BEAN_NAME = "HttpStatus";

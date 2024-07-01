@@ -1,5 +1,6 @@
 package cn.karent.plugin;
 
+import cn.karent.common.PluginComponent;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Response;
 import cn.karent.util.JsonUtils;
@@ -10,7 +11,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 @Slf4j
-@Component(MessyReplyPlugin.BEAN_NAME)
+@PluginComponent(MessyReplyPlugin.BEAN_NAME)
 public class MessyReplyPlugin extends ConfigurablePlugin<MessyReplyPlugin.Config> {
 
     public static final String BEAN_NAME = "MessyReply";

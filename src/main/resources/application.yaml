@@ -10,7 +10,7 @@ management:
       exposure:
         include: info,health,prometheus
 server:
-  port: 8080
+  port: 8079
 
 
 template:

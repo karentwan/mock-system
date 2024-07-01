@@ -1,6 +1,7 @@
 package cn.karent.plugin.callback;
 
 import cn.karent.common.Constants;
+import cn.karent.common.PluginComponent;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Request;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -15,10 +16,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
@@ -33,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Component(CallbackPlugin.BEAN_NAME)
+@PluginComponent(CallbackPlugin.BEAN_NAME)
 public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     public static final String BEAN_NAME = "Callback";

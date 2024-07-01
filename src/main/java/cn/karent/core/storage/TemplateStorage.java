@@ -41,6 +41,13 @@ public interface TemplateStorage {
     List<PluginConfig> getPlugins(String api) throws IOException;
 
     /**
+     * 获取模板保存的时间
+     *
+     * @return 模板保存时间
+     */
+    Long getTimestamp(String api) throws IOException;
+
+    /**
      * 存储模板
      *
      * @param api      接口名称

@@ -50,6 +50,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
         return template;
     }
 
+
     /**
      * 获取响应头
      *
@@ -72,6 +73,11 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     @Override
     public Template getTemplate(String api) throws IOException {
         return getSavedTemplate(api).getTemplate();
+    }
+
+    @Override
+    public Long getTimestamp(String api) throws IOException {
+        return getSavedTemplate(api).getTimestamp();
     }
 
     /**
@@ -138,10 +144,16 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
          */
         private T template;
 
+        /**
+         * 缓存时间戳
+         */
+        private Long timestamp;
+
         public Config(Map<String, String> headers, T template, List<PluginConfig> plugins) {
             this.headers = headers;
             this.template = template;
             this.plugins = plugins;
+            this.timestamp = System.currentTimeMillis();
         }
     }
 }
