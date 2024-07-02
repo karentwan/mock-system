@@ -20,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +38,7 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     private final RestTemplate restTemplate;
 
-    private final ScheduledExecutorService scheduled = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduled;
 
     /**
      * 校验参数配置是否有效
