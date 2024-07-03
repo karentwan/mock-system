@@ -1,7 +1,6 @@
 package cn.karent.filter.plugin;
 
 import cn.karent.core.ConfigController;
-import cn.karent.core.storage.TemplateStorage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
