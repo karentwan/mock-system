@@ -8,6 +8,7 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 微信加签拦截器
@@ -23,7 +24,7 @@ public class WeXinSignInterceptor implements CallbackInterceptor {
     public static final String BEAN_NAME = "WeXinSignInterceptor";
 
     @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
+    public ClientHttpResponse intercept(HttpRequest request, byte[] body, Map<String, Object> extra, ClientHttpRequestExecution execution) throws IOException {
         log.info("微信回调, 微信加签");
         return execution.execute(request, body);
     }

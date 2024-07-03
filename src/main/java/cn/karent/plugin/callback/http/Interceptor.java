@@ -23,8 +23,11 @@ public class Interceptor implements ClientHttpRequestInterceptor {
 
     public static final String INTERCEPTOR_NAME = "name";
 
+    public static final String EXTRA = "extra";
+
     private final Map<String, CallbackInterceptor> interceptorMap;
 
+    @SuppressWarnings("all")
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         log.debug("开始restTemplate拦截器处理");
@@ -43,8 +46,9 @@ public class Interceptor implements ClientHttpRequestInterceptor {
         }
         String name = (String) config.get(INTERCEPTOR_NAME);
         CallbackInterceptor callbackInterceptor = interceptorMap.get(name);
+        Map<String, Object> extra = (Map<String, Object>) config.getOrDefault(EXTRA, Map.of());
         if (!Objects.isNull(callbackInterceptor)) {
-            return callbackInterceptor.intercept(request, bytes, execution);
+            return callbackInterceptor.intercept(request, bytes, extra, execution);
         } else {
             return execution.execute(request, bytes);
         }
