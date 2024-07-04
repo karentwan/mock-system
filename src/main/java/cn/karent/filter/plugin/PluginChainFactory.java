@@ -89,15 +89,26 @@ public class PluginChainFactory {
         Node node = cache.getOrDefault(api, DEFAULT);
         PluginChain pluginChain = new PluginChain(request, response, chain);
         List<Plugin> plugins = null;
-        if (node.getTimestamp().compareTo(newestTimestamp) == 0) {
-            plugins = node.getPlugins();
-        } else {
+        if (isDirty(newestTimestamp, node.getTimestamp())) {
             log.debug("脏页, 重新构建插件调用链, 最新时间戳: {}\t缓存时间戳: {}", newestTimestamp, node.getTimestamp());
             plugins = constructPluginList(templateStorage.getPlugins(api));
             cache.put(api, new Node(newestTimestamp, plugins));
+        } else {
+            plugins = node.getPlugins();
         }
         plugins.forEach(pluginChain::addPlugin);
         return pluginChain;
+    }
+
+    /**
+     * 判断缓存是否是脏页
+     *
+     * @param newestTimestamp 最新的时间戳
+     * @param timestamp       缓存的时间戳
+     * @return true/false
+     */
+    private boolean isDirty(Long newestTimestamp, Long timestamp) {
+        return timestamp.compareTo(newestTimestamp) != 0;
     }
 
     @Getter
@@ -105,8 +116,14 @@ public class PluginChainFactory {
     @AllArgsConstructor
     static class Node {
 
+        /**
+         * 插件列表缓存的时间戳
+         */
         private Long timestamp;
 
+        /**
+         * 插件列表
+         */
         private List<Plugin> plugins;
 
     }
