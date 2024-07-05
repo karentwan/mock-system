@@ -19,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class Render {
+public class TemplateRender {
 
     public String renderContent(Template template, Map<String, Object> dataModel) {
         try {

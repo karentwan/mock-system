@@ -3,7 +3,7 @@ package cn.karent.plugin.callback;
 import cn.karent.common.Constants;
 import cn.karent.common.PluginComponent;
 import cn.karent.common.TemplateFactory;
-import cn.karent.core.render.Render;
+import cn.karent.core.render.TemplateRender;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Request;
 import cn.karent.util.JsonUtils;
@@ -47,7 +47,7 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     private final ScheduledExecutorService scheduled;
 
-    private final Render render;
+    private final TemplateRender templateRender;
 
     private final TemplateFactory templateFactory;
 
@@ -79,6 +79,17 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
         return JsonUtils.parseMap(str);
     }
 
+    private String renderContent(byte[] body) {
+        try {
+            Template template = getTemplate();
+            Map<String, Object> map = createMapFrom(body);
+            Map<String, Object> dataModel = Map.of(Constants.BODY, map);
+            return templateRender.renderContent(template, dataModel);
+        } catch (IOException e) {
+            log.error("异常：", e);
+            throw new IllegalStateException(e);
+        }
+    }
 
     @Override
     protected void processRequest(Request request) {
@@ -95,16 +106,7 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
                 Map<String, String> headerMap = Optional.ofNullable(config.getHeaders())
                         .orElse(Constants.DEFAULT_RESPONSE_HEADER);
                 headerMap.forEach(headers::add);
-                String content = null;
-                try {
-                    Template template = getTemplate();
-                    Map<String, Object> map = createMapFrom(request.getBody());
-                    Map<String, Object> dataModel = Map.of(Constants.BODY, map);
-                    content = render.renderContent(template, dataModel);
-                } catch (IOException e) {
-                    log.error("异常：", e);
-                    throw new IllegalStateException(e);
-                }
+                String content = renderContent(request.getBody());
                 ConfiguredRequest configuredRequest = new ConfiguredRequest(content, config.getInterceptor());
                 HttpEntity<ConfiguredRequest> requestEntity = new HttpEntity<>(configuredRequest, headers);
                 ResponseEntity<String> entity = restTemplate.postForEntity(config.getUrl(), requestEntity, String.class);

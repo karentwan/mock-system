@@ -2,7 +2,7 @@ package cn.karent.core;
 
 import cn.karent.common.Constants;
 import cn.karent.core.model.Response;
-import cn.karent.core.render.Render;
+import cn.karent.core.render.TemplateRender;
 import cn.karent.core.storage.TemplateStorage;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class TemplateService {
     /**
      * 响应渲染器
      */
-    private final Render render;
+    private final TemplateRender templateRender;
 
     /**
      * 模板存储
@@ -99,7 +99,7 @@ public class TemplateService {
      */
     public Response render(String api, Map<String, Object> headers, Map<String, Object> body) throws IOException {
         Map<String, Object> dataModel = Map.of(Constants.HEADER, processKeyOfHeaders(headers), Constants.BODY, body, Constants.FUNCTION, createFunction());
-        String content = render.renderContent(templateStorage.getTemplate(api), dataModel);
+        String content = templateRender.renderContent(templateStorage.getTemplate(api), dataModel);
         Map<String, String> responseHeaders = templateStorage.getHeaders(api);
         return Response.builder()
                 .headers(responseHeaders)
