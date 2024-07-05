@@ -1,5 +1,6 @@
 package cn.karent.core;
 
+import cn.karent.common.Constants;
 import cn.karent.core.model.Response;
 import cn.karent.core.render.Render;
 import cn.karent.core.storage.TemplateStorage;
@@ -22,21 +23,6 @@ import java.util.Random;
 @Slf4j
 @Component
 public class TemplateService {
-
-    /**
-     * 模板中请求头的前缀
-     */
-    public static final String HEADER = "header";
-
-    /**
-     * 模板中请求参数的前缀
-     */
-    public static final String BODY = "body";
-
-    /**
-     * 模板中可以使用的函数的前缀
-     */
-    public static final String FUNCTION = "F";
 
     /**
      * 响应渲染器
@@ -112,7 +98,7 @@ public class TemplateService {
      * @return 响应
      */
     public Response render(String api, Map<String, Object> headers, Map<String, Object> body) throws IOException {
-        Map<String, Object> dataModel = Map.of(HEADER, processKeyOfHeaders(headers), BODY, body, FUNCTION, createFunction());
+        Map<String, Object> dataModel = Map.of(Constants.HEADER, processKeyOfHeaders(headers), Constants.BODY, body, Constants.FUNCTION, createFunction());
         String content = render.renderContent(templateStorage.getTemplate(api), dataModel);
         Map<String, String> responseHeaders = templateStorage.getHeaders(api);
         return Response.builder()

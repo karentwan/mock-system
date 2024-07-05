@@ -2,10 +2,14 @@ package cn.karent.plugin.callback;
 
 import cn.karent.common.Constants;
 import cn.karent.common.PluginComponent;
+import cn.karent.common.TemplateFactory;
+import cn.karent.core.render.Render;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Request;
+import cn.karent.util.JsonUtils;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import freemarker.template.Template;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -18,6 +22,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,6 +47,12 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
 
     private final ScheduledExecutorService scheduled;
 
+    private final Render render;
+
+    private final TemplateFactory templateFactory;
+
+    private volatile Template cacheTemplate;
+
     /**
      * 校验参数配置是否有效
      *
@@ -49,6 +62,23 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
         return "get".equalsIgnoreCase(config.getMethod())
                 || "post".equalsIgnoreCase(config.getMethod()) && StringUtils.isNotBlank(config.getBody());
     }
+
+    private Template getTemplate() throws IOException {
+        if (cacheTemplate == null) {
+            synchronized (this) {
+                if (cacheTemplate == null) {
+                    cacheTemplate = templateFactory.createTemplate("name", config.getBody());
+                }
+            }
+        }
+        return cacheTemplate;
+    }
+
+    private Map<String, Object> createMapFrom(byte[] body) {
+        String str = new String(body, StandardCharsets.UTF_8);
+        return JsonUtils.parseMap(str);
+    }
+
 
     @Override
     protected void processRequest(Request request) {
@@ -65,7 +95,17 @@ public class CallbackPlugin extends ConfigurablePlugin<CallbackPlugin.Config> {
                 Map<String, String> headerMap = Optional.ofNullable(config.getHeaders())
                         .orElse(Constants.DEFAULT_RESPONSE_HEADER);
                 headerMap.forEach(headers::add);
-                ConfiguredRequest configuredRequest = new ConfiguredRequest(config.getBody(), config.getInterceptor());
+                String content = null;
+                try {
+                    Template template = getTemplate();
+                    Map<String, Object> map = createMapFrom(request.getBody());
+                    Map<String, Object> dataModel = Map.of(Constants.BODY, map);
+                    content = render.renderContent(template, dataModel);
+                } catch (IOException e) {
+                    log.error("异常：", e);
+                    throw new IllegalStateException(e);
+                }
+                ConfiguredRequest configuredRequest = new ConfiguredRequest(content, config.getInterceptor());
                 HttpEntity<ConfiguredRequest> requestEntity = new HttpEntity<>(configuredRequest, headers);
                 ResponseEntity<String> entity = restTemplate.postForEntity(config.getUrl(), requestEntity, String.class);
                 HttpStatusCode statusCode = entity.getStatusCode();
