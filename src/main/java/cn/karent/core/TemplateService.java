@@ -2,7 +2,7 @@ package cn.karent.core;
 
 import cn.karent.core.model.Response;
 import cn.karent.core.render.Render;
-import freemarker.template.TemplateException;
+import cn.karent.core.storage.TemplateStorage;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +42,11 @@ public class TemplateService {
      * 响应渲染器
      */
     private final Render render;
+
+    /**
+     * 模板存储
+     */
+    private final TemplateStorage templateStorage;
 
     /**
      * 切换
@@ -105,13 +110,11 @@ public class TemplateService {
      * @param headers http请求头
      * @param body    请求内容
      * @return 响应
-     * @throws IOException
-     * @throws TemplateException
      */
-    public Response render(String api, Map<String, Object> headers, Map<String, Object> body) {
+    public Response render(String api, Map<String, Object> headers, Map<String, Object> body) throws IOException {
         Map<String, Object> dataModel = Map.of(HEADER, processKeyOfHeaders(headers), BODY, body, FUNCTION, createFunction());
-        String content = render.renderContent(api, dataModel);
-        Map<String, String> responseHeaders = render.renderHeader(api);
+        String content = render.renderContent(templateStorage.getTemplate(api), dataModel);
+        Map<String, String> responseHeaders = templateStorage.getHeaders(api);
         return Response.builder()
                 .headers(responseHeaders)
                 .body(content)
