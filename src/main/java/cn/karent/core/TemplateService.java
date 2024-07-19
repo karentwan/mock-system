@@ -1,8 +1,9 @@
 package cn.karent.core;
 
+import cn.karent.common.Constants;
 import cn.karent.core.model.Response;
-import cn.karent.core.render.Render;
-import freemarker.template.TemplateException;
+import cn.karent.core.render.TemplateRender;
+import cn.karent.core.storage.TemplateStorage;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,24 +25,14 @@ import java.util.Random;
 public class TemplateService {
 
     /**
-     * 模板中请求头的前缀
-     */
-    public static final String HEADER = "header";
-
-    /**
-     * 模板中请求参数的前缀
-     */
-    public static final String BODY = "body";
-
-    /**
-     * 模板中可以使用的函数的前缀
-     */
-    public static final String FUNCTION = "F";
-
-    /**
      * 响应渲染器
      */
-    private final Render render;
+    private final TemplateRender templateRender;
+
+    /**
+     * 模板存储
+     */
+    private final TemplateStorage templateStorage;
 
     /**
      * 切换
@@ -105,13 +96,11 @@ public class TemplateService {
      * @param headers http请求头
      * @param body    请求内容
      * @return 响应
-     * @throws IOException
-     * @throws TemplateException
      */
-    public Response render(String api, Map<String, Object> headers, Map<String, Object> body) {
-        Map<String, Object> dataModel = Map.of(HEADER, processKeyOfHeaders(headers), BODY, body, FUNCTION, createFunction());
-        String content = render.renderContent(api, dataModel);
-        Map<String, String> responseHeaders = render.renderHeader(api);
+    public Response render(String api, Map<String, Object> headers, Map<String, Object> body) throws IOException {
+        Map<String, Object> dataModel = Map.of(Constants.HEADER, processKeyOfHeaders(headers), Constants.BODY, body, Constants.FUNCTION, createFunction());
+        String content = templateRender.renderContent(templateStorage.getTemplate(api), dataModel);
+        Map<String, String> responseHeaders = templateStorage.getHeaders(api);
         return Response.builder()
                 .headers(responseHeaders)
                 .body(content)

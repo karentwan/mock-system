@@ -1,5 +1,7 @@
 package cn.karent.filter.plugin;
 
+import cn.karent.common.Configurable;
+
 /**
  * 可配置的插件适配器
  *

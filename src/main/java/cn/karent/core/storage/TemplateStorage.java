@@ -2,7 +2,6 @@ package cn.karent.core.storage;
 
 import cn.karent.core.model.PluginConfig;
 import freemarker.template.Template;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ public interface TemplateStorage {
      *
      * @param api 接口名称
      * @return 模板
-     * @throws IOException
      */
     Template getTemplate(String api) throws IOException;
 
@@ -36,9 +34,15 @@ public interface TemplateStorage {
      *
      * @param api 接口名
      * @return 插件列表
-     * @throws IOException
      */
     List<PluginConfig> getPlugins(String api) throws IOException;
+
+    /**
+     * 获取模板保存的时间
+     *
+     * @return 模板保存时间
+     */
+    Long getTimestamp(String api) throws IOException;
 
     /**
      * 存储模板

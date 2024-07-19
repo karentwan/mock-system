@@ -19,4 +19,7 @@ template:
   # FILE模式下存在模板的目录
   template-path: ./templates
 
+logging:
+  level:
+    cn.karent: DEBUG
 

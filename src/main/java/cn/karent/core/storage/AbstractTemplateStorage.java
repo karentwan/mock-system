@@ -1,7 +1,7 @@
 package cn.karent.core.storage;
 
+import cn.karent.common.TemplateFactory;
 import cn.karent.core.model.PluginConfig;
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     private final Map<String, Config<Template>> cache = new ConcurrentHashMap<>(16);
 
     @Autowired
-    private Configuration configuration;
+    private TemplateFactory templateFactory;
 
     /**
      * 获取模板
@@ -41,7 +40,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
                 if (template == null) {
                     Config<String> config = getSavedTemplate0(api);
                     Assert.notNull(config, "未配置该模板");
-                    Template tpl = new Template(api, config.getTemplate(), configuration);
+                    Template tpl = templateFactory.createTemplate(api, config.getTemplate());
                     template = new Config<>(config.getHeaders(), tpl, config.getPlugins());
                     cache.put(api, template);
                 }
@@ -49,6 +48,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
         }
         return template;
     }
+
 
     /**
      * 获取响应头
@@ -72,6 +72,11 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     @Override
     public Template getTemplate(String api) throws IOException {
         return getSavedTemplate(api).getTemplate();
+    }
+
+    @Override
+    public Long getTimestamp(String api) throws IOException {
+        return getSavedTemplate(api).getTimestamp();
     }
 
     /**
@@ -104,7 +109,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
     /**
      * 子类需实现该接口对数据配置信息进行存储
      *
-     * @param api   接口名称
+     * @param api    接口名称
      * @param config 配置信息
      */
     protected abstract void store0(String api, Config<String> config);
@@ -138,10 +143,16 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
          */
         private T template;
 
+        /**
+         * 缓存时间戳
+         */
+        private Long timestamp;
+
         public Config(Map<String, String> headers, T template, List<PluginConfig> plugins) {
             this.headers = headers;
             this.template = template;
             this.plugins = plugins;
+            this.timestamp = System.currentTimeMillis();
         }
     }
 }

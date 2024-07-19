@@ -1,8 +1,6 @@
 package cn.karent.filter.plugin;
 
 import cn.karent.core.ConfigController;
-import cn.karent.core.model.PluginConfig;
-import cn.karent.core.storage.TemplateStorage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,8 +44,6 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
 
     private final PluginChainFactory pluginChainFactory;
 
-    private final TemplateStorage templateStorage;
-
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return notFilterUrls.contains(request.getRequestURI());
@@ -59,8 +55,7 @@ public class PluginCompositeFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
         try {
             // 构造插件调用链
-            List<PluginConfig> plugins = templateStorage.getPlugins(servletRequest.getRequestURI());
-            PluginChain pluginChain = pluginChainFactory.createPluginChain(plugins, servletRequest, servletResponse, filterChain);
+            PluginChain pluginChain = pluginChainFactory.createPluginChain(servletRequest, servletResponse, filterChain);
 
             // 创建请求对象
             ByteArrayOutputStream bos = new ByteArrayOutputStream();

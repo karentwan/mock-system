@@ -1,5 +1,6 @@
 package cn.karent.plugin;
 
+import cn.karent.common.PluginComponent;
 import cn.karent.filter.plugin.ConfigurablePlugin;
 import cn.karent.filter.plugin.Response;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Component(DelayResponsePlugin.BEAN_NAME)
+@PluginComponent(DelayResponsePlugin.BEAN_NAME)
 public class DelayResponsePlugin extends ConfigurablePlugin<DelayResponsePlugin.Config> {
 
     public static final String BEAN_NAME = "DelayResponse";

@@ -1,6 +1,5 @@
 package cn.karent.core.render;
 
-import cn.karent.core.storage.TemplateStorage;
 import cn.karent.exception.RenderException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,14 +19,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class DefaultRender implements Render {
+public class TemplateRender {
 
-    private final TemplateStorage templateStorage;
-
-    @Override
-    public String renderContent(String api, Map<String, Object> dataModel) {
+    public String renderContent(Template template, Map<String, Object> dataModel) {
         try {
-            Template template = templateStorage.getTemplate(api);
             StringWriter writer = new StringWriter();
             template.process(dataModel, writer);
             return writer.toString();
@@ -36,12 +31,4 @@ public class DefaultRender implements Render {
         }
     }
 
-    @Override
-    public Map<String, String> renderHeader(String api) {
-        try {
-            return templateStorage.getHeaders(api);
-        } catch (IOException e) {
-            throw new RenderException(e);
-        }
-    }
 }
