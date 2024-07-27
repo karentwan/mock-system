@@ -37,6 +37,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
         Config<Template> template = cache.get(api);
         if (template == null) {
             synchronized (this) {
+                template = cache.get(api);
                 if (template == null) {
                     Config<String> config = getSavedTemplate0(api);
                     Assert.notNull(config, "未配置该模板");
