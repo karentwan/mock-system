@@ -27,6 +27,7 @@
         <apollo.version>2.1.0</apollo.version>
         <minio.version>8.3.5</minio.version>
         <freemarker.version>2.3.33</freemarker.version>
+        <kona-crypto.version>1.0.9</kona-crypto.version>
     </properties>
 
     <dependencies>
@@ -107,6 +108,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.tencent.kona</groupId>
+            <artifactId>kona-crypto</artifactId>
+            <version>${kona-crypto.version}</version>
+        </dependency>
+
 
     </dependencies>
     <dependencyManagement>
