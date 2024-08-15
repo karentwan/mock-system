@@ -27,7 +27,7 @@
         <apollo.version>2.1.0</apollo.version>
         <minio.version>8.3.5</minio.version>
         <freemarker.version>2.3.33</freemarker.version>
-        <kona-crypto.version>1.0.9</kona-crypto.version>
+        <kona-crypto.version>1.0.12</kona-crypto.version>
     </properties>
 
     <dependencies>
