@@ -4,13 +4,14 @@ import com.tencent.kona.crypto.KonaCryptoProvider;
 import com.tencent.kona.crypto.spec.SM2PrivateKeySpec;
 import com.tencent.kona.crypto.spec.SM2PublicKeySpec;
 import com.tencent.kona.crypto.util.SM2Ciphertext;
-import javax.crypto.BadPaddingException;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
+import java.security.interfaces.ECPrivateKey;
+import java.security.interfaces.ECPublicKey;
 import java.util.HexFormat;
 
 /**
@@ -19,14 +20,51 @@ import java.util.HexFormat;
  * @author wanshengdao
  * @date 2024/8/15
  */
+@Slf4j
 public final class Sm2Utils {
 
     static {
         Security.addProvider(new KonaCryptoProvider());
     }
 
+    @RequiredArgsConstructor
+    @Getter
+    @Builder
+    public static class KeyHolder {
+
+        private final String privateKey;
+
+        private final String publicKey;
+
+    }
+
     /**
-     * 加密
+     * 生成公私钥 <br/>
+     * <b>注: 公钥如果其他算法不兼容是因为这里生成的公钥有04</b>
+     *
+     * @return 公、私钥对
+     */
+    public static KeyHolder generateKeyPair() {
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("SM2");
+            KeyPair keyPair = keyPairGenerator.generateKeyPair();
+            ECPublicKey publicKey = (ECPublicKey) keyPair.getPublic();
+            ECPrivateKey privateKey = (ECPrivateKey) keyPair.getPrivate();
+            String publicKeyHex = HexFormat.of().formatHex(publicKey.getEncoded());
+            String privateKeyHex = HexFormat.of().formatHex(privateKey.getEncoded());
+            log.debug("hex: {}", publicKeyHex);
+            log.debug("pri hex: {}", privateKeyHex);
+            return KeyHolder.builder()
+                    .privateKey(privateKeyHex)
+                    .publicKey(publicKeyHex)
+                    .build();
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * 加密, 输出raw格式
      *
      * @param publicKeyHexStr 十六进制公钥
      * @param data            数据
@@ -41,15 +79,20 @@ public final class Sm2Utils {
             Cipher cipher = Cipher.getInstance("SM2");
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             // 已加密数据解成byte并解密
-            return cipher.doFinal(data);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException |
-                 IllegalBlockSizeException | BadPaddingException e) {
+            byte[] bytes = cipher.doFinal(data);
+            // 已加密数据解成byte并解密
+            return SM2Ciphertext.builder()
+                    .format(SM2Ciphertext.Format.DER_C1C3C2)
+                    .encodedCiphertext(bytes)
+                    .build()
+                    .rawC1C3C2();
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     /**
-     * 解密
+     * 解密, 输入raw格式
      *
      * @param privateKeyHexStr 私钥
      * @param data             密文
@@ -65,7 +108,7 @@ public final class Sm2Utils {
             Cipher cipher = Cipher.getInstance("SM2");
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            // 已加密数据解成byte并解密
+            // 转换数据的格式
             data = SM2Ciphertext.builder()
                     .format(SM2Ciphertext.Format.RAW_C1C3C2)
                     .encodedCiphertext(data)
@@ -73,8 +116,7 @@ public final class Sm2Utils {
                     .derC1C3C2();
 
             return cipher.doFinal(data);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException |
-                 IOException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
@@ -95,7 +137,7 @@ public final class Sm2Utils {
             signature.initSign(privateKey);
             signature.update(data);
             return signature.sign();
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException e) {
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
@@ -117,7 +159,7 @@ public final class Sm2Utils {
             signature.initVerify(privateKey);
             signature.update(data);
             return signature.verify(sign);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | InvalidKeyException | SignatureException e) {
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
