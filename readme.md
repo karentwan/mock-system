@@ -29,7 +29,7 @@ MEM模式表示可以通过接口配置模板，配置的模板将存储在内�
 配置接口如下
 
 ```shell
-POST http://localhost:8079/template/config
+POST http://localhost:8079/config
 
 {
     "api": "/test",
@@ -129,7 +129,7 @@ POST http://localhost:8079/test
 插件系统的配置
 ```shell
 
-POST http://localhost:8079/template/config
+POST http://localhost:8079/config
 
 {
     "api": "/test",
