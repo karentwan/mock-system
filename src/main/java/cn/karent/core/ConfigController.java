@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ConfigController {
 
-    public static final String CONFIG_URL = "/template/config";
+    public static final String CONFIG_URL = "/config";
 
     private final TemplateConfig.Config templateConfig;
 
