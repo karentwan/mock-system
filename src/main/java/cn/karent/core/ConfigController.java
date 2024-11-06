@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
  * @author wanshengdao
  * @date 2024/6/14
  */
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class ConfigController {
 
     public static final String CONFIG_URL = "/config";
