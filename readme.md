@@ -166,3 +166,14 @@ POST http://localhost:8079/config
 
 
 **注意：自定义的插件需要加上SpringBoot的@Component注解，否则插件系统的配置将无法生效。**
+
+### 打印日志
+正常情况只会打印请求和响应信息，如果需要打印请求头信息，可以通过在参数后加`log_detail=on`参数:
+```shell
+POST http://localhost:8079/test?log_detail=on
+
+{
+  "a": "123"
+}
+```
+如上，加上请求打印功能后，就能在日志里面看到请求头信息。
