@@ -148,9 +148,75 @@ POST http://localhost:8079/config
 
 ```
 
-使用上面的配置，当我们访问`http://localhost:8079/test` 时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
+上面是http状态码的插件配置，使用上面的配置，当我们访问`http://localhost:8079/test` 时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
 
-上面的模板配置中，`plugins`是配置的插件列表，该参数配置的多个插件会以责任链的方式依次执行。
+上面的模板配置中，`plugins`是配置的插件列表，该参数配置可以配置多个插件，多个插件会依次生效。
+
+除了上面的插件，系统还内置一些其他的插件，如下：
+**延时插件**
+```shell
+POST http://localhost:8079/config
+
+{
+    "api": "/test",
+    "headers": {
+      "content-type": "application/text"
+    },
+    "template": "hello, world",
+    "plugins":
+    [
+        {
+            "name": "DelayResponse",
+            "config": {
+                "delay_time": 10,
+                "unit": "SECONDS"
+            }
+        }
+    ]
+}
+```
+
+**回调插件**
+注：回调插件可以自定义拦截器, 例如加签、验签等功能可以写在拦截器里面
+```shell
+POST http://localhost:8079/config
+
+{
+    "api": "/test",
+    "headers":
+    {
+        "content-type": "application/text"
+    },
+    "template": "hello, world",
+    "plugins":
+    [
+        {
+            "name": "Callback",
+            "config":
+            {
+                "url": "http://thirdpart:8080/callback",
+                "interval_time": 10,
+                "unit": "SECONDS",
+                "method": "POST",
+                "headers":
+                {
+                    "content-type": "application/json"
+                },
+                "body": "{\"hello\": \"world\"}",
+                "interceptor":
+                {
+                    "WeXinSignInterceptor":
+                    {
+                        "config": "key"
+                    }
+                }
+            }
+        }
+    ]
+}
+```
+上面回调拦截器后面配置的json就是POST请求的请求体, 除了json还可以使用其他的数据格式。
+
 
 #### 自定义插件规范
 如果有自定义插件的需求，需要实现`cn.karent.filter.plugin.Plugin` 接口, 并重写它的方法：
