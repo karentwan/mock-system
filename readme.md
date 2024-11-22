@@ -141,7 +141,7 @@ POST http://localhost:8079/config
     [
         {
             "name": "HttpStatus",
-            "config": "{\"status\": 400 }"
+            "config": {"status": 400 }
         }
     ]
 }
