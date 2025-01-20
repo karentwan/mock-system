@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.Map;
 
@@ -43,5 +44,10 @@ public class ConfigCmd {
      * 插件
      */
     private List<PluginConfig> plugins;
+
+    /**
+     * 路由, 当有路由参数时, 将忽略template和plugins的取值
+     */
+    private List<RouteCmd> routes;
 
 }

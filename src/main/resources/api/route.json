@@ -1,0 +1,35 @@
+{
+  "api": "/test",
+  "routes": [
+    {
+      "id": "id1",
+      "template": {
+        "hello": "wan"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wan"
+          }
+        }
+      ]
+    },
+    {
+      "id": "id2",
+      "template": {
+        "hello": "帅哥"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wu"
+          }
+        }
+      ]
+    }
+  ]
+}

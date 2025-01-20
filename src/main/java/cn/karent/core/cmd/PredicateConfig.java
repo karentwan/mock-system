@@ -1,29 +1,25 @@
-package cn.karent.core.model;
+package cn.karent.core.cmd;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author wanshengdao
- * @date 2024/6/16
+ * @date 2024/6/19
  */
 @Setter
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Slf4j
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class PluginConfig {
+public class PredicateConfig {
 
-    /**
-     * 插件名
-     */
     private String name;
 
-    /**
-     * 插件配置项
-     */
-    private String config;
+    private Object config;
 
 }

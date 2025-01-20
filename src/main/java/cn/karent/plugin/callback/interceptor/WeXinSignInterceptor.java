@@ -16,8 +16,8 @@ import java.util.Map;
  * @author wanshengdao
  * @date 2024/6/29
  */
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 @Component(WeXinSignInterceptor.BEAN_NAME)
 public class WeXinSignInterceptor implements CallbackInterceptor {
 
