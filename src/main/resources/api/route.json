@@ -13,6 +13,13 @@
             "name": "name",
             "value": "wan"
           }
+        },
+        {
+          "name": "head",
+          "args": {
+            "head": "cust",
+            "value": "id"
+          }
         }
       ],
       "plugins": [

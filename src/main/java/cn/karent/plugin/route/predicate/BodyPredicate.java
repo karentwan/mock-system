@@ -3,10 +3,10 @@ package cn.karent.plugin.route.predicate;
 import cn.karent.common.Constants;
 import cn.karent.common.MapGetter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -21,12 +21,32 @@ public class BodyPredicate implements Predicate<Map<String, Object>> {
 
     private final Map<String, Object> args;
 
+    private List<String> toKeys(String key) {
+        return Arrays.asList(key.split("\\."));
+    }
+
+    private Object get(MapGetter getter, List<String> keys) {
+        if (CollectionUtils.isEmpty(keys)) {
+            return null;
+        }
+        int n = keys.size();
+        MapGetter body = getter.get(Constants.BODY);
+        if (n == 1) {
+            return body.getObject(keys.get(0));
+        }
+        for (int i = 0; i < n - 1; i++) {
+            body = body.get(keys.get(i));
+        }
+        return body.getObject(keys.get(n - 1));
+    }
+
     @Override
     public boolean test(Map<String, Object> map) {
         String key = (String) args.get("name");
         Object value = args.get("value");
         MapGetter getter = MapGetter.of(map);
-        Object v = getter.get(Constants.BODY).getObject(key);
+        List<String> keys = toKeys(key);
+        Object v = get(getter, keys);
         if (v == null) {
             return false;
         }
