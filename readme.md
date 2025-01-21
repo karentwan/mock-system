@@ -124,9 +124,10 @@ POST http://localhost:8079/test
 ```
 
 ### 插件系统
-为了增强请求和响应的处理，系统还引入了一套插件系统体系，插件系统的配置是可插拔式的，下面给出一个修改http状态码的插件例子。
+为了增强请求和响应的处理，系统还引入了一套插件系统体系，插件系统的配置是可插拔式的，下面是一些支持的插件。
 
-插件系统的配置
+#### 修改响应状态码的插件
+
 ```shell
 
 POST http://localhost:8079/config
@@ -153,7 +154,9 @@ POST http://localhost:8079/config
 上面的模板配置中，`plugins`是配置的插件列表，该参数配置可以配置多个插件，多个插件会依次生效。
 
 除了上面的插件，系统还内置一些其他的插件，如下：
-**延时插件**
+
+#### 延时插件
+
 ```shell
 POST http://localhost:8079/config
 
@@ -176,7 +179,9 @@ POST http://localhost:8079/config
 }
 ```
 
-**回调插件**
+#### 回调插件
+
+
 注：回调插件可以自定义拦截器, 例如加签、验签等功能可以写在拦截器里面
 ```shell
 POST http://localhost:8079/config
@@ -217,9 +222,52 @@ POST http://localhost:8079/config
 ```
 上面回调拦截器后面配置的json就是POST请求的请求体, 除了json还可以使用其他的数据格式。
 
-**路由插件**
+#### 已读乱回插件
+```shell
+POST http://localhost:8079/config
 
-当需要根据请求参数响应不同的响应体时, 可以配置路由插件, 该路由插件根据谓词(predicate)来决定请求走哪一个路由，而且路由插件具备独立的插件列表，配置方法如下：
+{
+    "api": "/test",
+    "headers":
+    {
+        "content-type": "application/text"
+    },
+    "template": "hello, world",
+    "plugins":
+    [
+        {
+            "name": "MessyReply",
+            "config":
+            {
+                "type": "JSON"
+            }
+        }
+    ]
+}
+```
+type取值为: JSON/STRING, 用来判断响应内容应该响应JSON还是响应字符串。
+
+#### 自定义插件规范
+如果有自定义插件的需求，需要实现`cn.karent.filter.plugin.Plugin` 接口, 并重写它的方法：
+> void doProcess(Request request, Response response, PluginChain chain) throws ServletException, IOException;
+
+
+如果只想要改变请求、响应二者之一，可以继承`cn.karent.filter.plugin.PluginAdapter`接口，并实现里面的`processRequest(Request)`方法或者`processResponse(Response)`方法。
+
+如果自定义插件有自己的参数（如上面配置Http状态码），那么需要实现`cn.karent.common.Configurable`接口，并重写它的方法：
+>  void configure0(C c);
+
+该方法会将参数传递给插件，具体的例子可以参考：`cn.karent.plugin.HttpStatusPlugin`类的实现。
+
+
+**注意：自定义的插件需要加上SpringBoot的@Component注解，否则插件系统的配置将无法生效(推荐使用@PluginComponent注解)。**
+
+
+
+### 路由系统
+
+
+当需要根据请求参数返回不同的响应体时, 可以配置响应路由, 路由系统会根据谓词(predicate)来决定请求走哪一个路由，而且每个路由里面可以配置单独的插件列表，配置方法如下：
 ```shell
 {
   "api": "/test",
@@ -265,24 +313,29 @@ POST http://localhost:8079/config
   ]
 }
 ```
-这上面配置有两个路由, 第一个路由条件是请求体里面含有name字段，且值为wan, 第二个路由条件是请求体里面含有name字段且值为wu,当满足第一个路由条件时，
-响应第一个路由里面配置的模板，且返回状态码为404,因为第一个路由配置了404插件。
-目前只实现了一个判断匹配请求体里面内容的谓词(predicate)。
-
-#### 自定义插件规范
-如果有自定义插件的需求，需要实现`cn.karent.filter.plugin.Plugin` 接口, 并重写它的方法：
-> void doProcess(Request request, Response response, PluginChain chain) throws ServletException, IOException; 
-
-
-如果只想要改变请求、响应二者之一，可以继承`cn.karent.filter.plugin.PluginAdapter`接口，并实现里面的`processRequest(Request)`方法或者`processResponse(Response)`方法。
-
-如果自定义插件有自己的参数（如上面配置Http状态码），那么需要实现`cn.karent.common.Configurable`接口，并重写它的方法：
->  void configure0(C c);
-
-该方法会将参数传递给插件，具体的例子可以参考：`cn.karent.plugin.HttpStatusPlugin`类的实现。
-
-
-**注意：自定义的插件需要加上SpringBoot的@Component注解，否则插件系统的配置将无法生效。**
+这上面配置有两个路由, 第一个路由条件是请求体里面含有name字段且值为wan, 第二个路由条件是请求体里面含有name字段且值为wu,当满足第一个路由条件时,
+响应第一个路由里面配置的模板, 且返回状态码为400, 因为第一个路由配置了400插件。
+目前内置的谓词如下：
+- body: 判断请求体里面的值是否等于某个值(支持正则表达式)
+```shell
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wu"
+          }
+        }
+```
+- head: 判断请求头里面的值是否等于某个值(支持正则表达式)
+```shell
+        {
+          "name": "head",
+          "args": {
+            "head": "cust",
+            "value": "value"
+          }
+        }
+```
 
 ### 打印日志
 正常情况只会打印请求和响应信息，如果需要打印请求头信息，可以通过在参数后加`log_level`参数来调整日志级别:
