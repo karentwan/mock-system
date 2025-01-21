@@ -27,9 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wanshengdao
  * @date 2024/6/16
  */
-@RequiredArgsConstructor
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PluginChainFactory {
 
     private final SmartValidator validator;
@@ -48,7 +48,7 @@ public class PluginChainFactory {
      * @param pluginConfigs 插件配置列表
      * @return 插件调用链
      */
-    private List<Plugin> constructPluginList(List<PluginConfig> pluginConfigs) {
+    public List<Plugin> constructPluginList(List<PluginConfig> pluginConfigs) {
         List<Plugin> result = new ArrayList<>();
         // 加入默认的请求体解析插件
         result.add(beanFactory.getBean(PostParsePlugin.BEAN_NAME, Plugin.class));

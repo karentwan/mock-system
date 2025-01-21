@@ -2,13 +2,18 @@ package cn.karent.plugin.route;
 
 import cn.karent.common.DataModelUtils;
 import cn.karent.common.PluginComponent;
-import cn.karent.filter.plugin.ConfigurablePlugin;
-import cn.karent.filter.plugin.Request;
+import cn.karent.core.model.PluginConfig;
+import cn.karent.filter.plugin.*;
 import cn.karent.plugin.route.predicate.PredicateFactory;
 import cn.karent.util.JsonUtils;
+import jakarta.servlet.ServletException;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +30,9 @@ public class RoutePlugin extends ConfigurablePlugin<RoutePlugin.Config> {
 
     public static final String NAME = "Route";
 
+    @Autowired
+    private PluginChainFactory pluginChainFactory;
+
     private Map<String, Object> createDataModel(Request request) {
         Map<String, Object> headers = new HashMap<>();
         request.iterator().forEachRemaining(item -> headers.put(item.getName(), item.getValue()));
@@ -33,7 +41,12 @@ public class RoutePlugin extends ConfigurablePlugin<RoutePlugin.Config> {
     }
 
     @Override
-    protected void processRequest(Request request) {
+    public void doProcess(Request request, Response response, PluginChain chain) throws ServletException, IOException {
+        calcRoute(chain, request);
+        chain.doProcess(request, response);
+    }
+
+    protected void calcRoute(PluginChain chain, Request request) {
         Map<String, Object> dataModel = createDataModel(request);
         // 构建谓词列表
         List<Route> routes = config.getRoutes();
@@ -42,6 +55,9 @@ public class RoutePlugin extends ConfigurablePlugin<RoutePlugin.Config> {
             // 匹配上路由后, 修改路径
             if (p.test(dataModel)) {
                 request.setApi(route.getPath());
+                // 添加插件列表
+                List<Plugin> plugins = pluginChainFactory.constructPluginList(route.getPlugins());
+                plugins.forEach(chain::addPlugin);
                 break;
             }
         }
@@ -65,12 +81,16 @@ public class RoutePlugin extends ConfigurablePlugin<RoutePlugin.Config> {
 
         private List<PredicateArg> predicates;
 
+        private List<PluginConfig> plugins;
+
     }
 
     @Getter
     @Setter
+    @Validated
     public static class Config {
 
+        @NotEmpty
         private List<Route> routes;
 
     }

@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,7 @@ public class ConfigController {
                 routeConfig.add(
                         Map.of("path", routeApi,
                                 "template", route.getTemplate(),
+                                "plugins", transformPlugins(route.getPlugins()),
                                 "predicates", route.getPredicates())
                 );
             }
@@ -85,8 +87,13 @@ public class ConfigController {
                 return JsonUtils.toString(obj);
             }
         }).orElse(Constants.DEFAULT_TEMPLATE);
+        List<cn.karent.core.model.PluginConfig> encodedPlugins = transformPlugins(pluginList);
+        templateStorage.store(api, headers, template, encodedPlugins);
+    }
+
+    private static List<cn.karent.core.model.PluginConfig> transformPlugins(List<PluginConfig> pluginList) {
         List<PluginConfig> plugins = Optional.ofNullable(pluginList).orElse(new ArrayList<>());
-        List<cn.karent.core.model.PluginConfig> encodedPlugins = plugins.stream()
+        return plugins.stream()
                 .map(plugin -> {
                     String config = null;
                     if (!Objects.isNull(plugin.getConfig())) {
@@ -95,7 +102,6 @@ public class ConfigController {
                     return new cn.karent.core.model.PluginConfig(plugin.getName(), config);
                 })
                 .collect(Collectors.toList());
-        templateStorage.store(api, headers, template, encodedPlugins);
     }
 
 }

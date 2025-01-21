@@ -28,5 +28,5 @@ public class Constants {
      * 模板中可以使用的函数的前缀
      */
     public static final String FUNCTION = "F";
-    public static final String NOT_FOUND = "404";
+    public static final String NOT_FOUND = "{ \"ret_code\": \"404\", \"ret_msg\": \"未找到该路由\" }";
 }

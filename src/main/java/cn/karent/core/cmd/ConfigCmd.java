@@ -2,6 +2,7 @@ package cn.karent.core.cmd;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,7 @@ public class ConfigCmd {
     /**
      * 路由, 当有路由参数时, 将忽略template和plugins的取值
      */
+    @Valid
     private List<RouteCmd> routes;
 
 }

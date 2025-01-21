@@ -14,6 +14,14 @@
             "value": "wan"
           }
         }
+      ],
+      "plugins": [
+        {
+          "name": "HttpStatus",
+          "config": {
+            "status": 400
+          }
+        }
       ]
     },
     {

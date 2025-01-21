@@ -217,6 +217,57 @@ POST http://localhost:8079/config
 ```
 上面回调拦截器后面配置的json就是POST请求的请求体, 除了json还可以使用其他的数据格式。
 
+**路由插件**
+
+当需要根据请求参数响应不同的响应体时, 可以配置路由插件, 该路由插件根据谓词(predicate)来决定请求走哪一个路由，而且路由插件具备独立的插件列表，配置方法如下：
+```shell
+{
+  "api": "/test",
+  "routes": [
+    {
+      "id": "id1",
+      "template": {
+        "hello": "wan"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wan"
+          }
+        }
+      ],
+      "plugins": [
+        {
+          "name": "HttpStatus",
+          "config": {
+            "status": 400
+          }
+        }
+      ]
+    },
+    {
+      "id": "id2",
+      "template": {
+        "hello": "帅哥"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wu"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+这上面配置有两个路由, 第一个路由条件是请求体里面含有name字段，且值为wan, 第二个路由条件是请求体里面含有name字段且值为wu,当满足第一个路由条件时，
+响应第一个路由里面配置的模板，且返回状态码为404,因为第一个路由配置了404插件。
+目前只实现了一个判断匹配请求体里面内容的谓词(predicate)。
 
 #### 自定义插件规范
 如果有自定义插件的需求，需要实现`cn.karent.filter.plugin.Plugin` 接口, 并重写它的方法：
