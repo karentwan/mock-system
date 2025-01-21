@@ -1,6 +1,7 @@
 package cn.karent.filter.plugin;
 
 import cn.karent.common.ServletInputStreamAdapter;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
@@ -17,9 +18,17 @@ public class BodyHttpServletRequestAdapter extends HttpServletRequestWrapper {
 
     private final ServletInputStream servletInputStream;
 
-    public BodyHttpServletRequestAdapter(HttpServletRequest request, byte[] content) {
+    private final String api;
+
+    public BodyHttpServletRequestAdapter(HttpServletRequest request, String api, byte[] content) {
         super(request);
+        this.api = api;
         servletInputStream = new ServletInputStreamAdapter(content);
+    }
+
+    @Override
+    public String getRequestURI() {
+        return StringUtils.isBlank(api) ? super.getRequestURI() : api;
     }
 
     @Override

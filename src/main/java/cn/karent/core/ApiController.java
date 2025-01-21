@@ -2,7 +2,6 @@ package cn.karent.core;
 
 import cn.karent.core.model.Response;
 import cn.karent.util.JsonUtils;
-import freemarker.template.TemplateException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -26,8 +26,8 @@ import java.util.Map;
  * @author wanshengdao
  * @date 2024/6/13
  */
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 public class ApiController {
 
@@ -39,8 +39,7 @@ public class ApiController {
      * @param headers  http请求头
      * @param request  http请求
      * @param response http响应
-     * @throws IOException
-     * @throws TemplateException
+     * @throws IOException io异常
      */
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST})
     public void mockResponse(@RequestHeader Map<String, Object> headers,

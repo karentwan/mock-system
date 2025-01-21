@@ -14,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wanshengdao
  * @date 2024/6/14
  */
-@RequiredArgsConstructor
 @Slf4j
 @Component
+@RequiredArgsConstructor
 @ConditionalOnProperty(prefix = "template", name = "mode", havingValue = "MEM")
 public class MemoryTemplateStorage extends AbstractTemplateStorage {
 

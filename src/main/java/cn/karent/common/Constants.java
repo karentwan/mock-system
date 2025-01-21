@@ -1,6 +1,6 @@
 package cn.karent.common;
 
-import java.util.HashMap;
+import cn.karent.util.JsonUtils;
 import java.util.Map;
 
 public class Constants {
@@ -8,12 +8,14 @@ public class Constants {
     /**
      * 默认的Http响应头
      */
-    public static final Map<String, String> DEFAULT_RESPONSE_HEADER = new HashMap<>();
+    public static final Map<String, String> DEFAULT_RESPONSE_HEADER = Map.of("content-type", "application/json");
 
     /**
      * 默认模板
      */
-    public static final String DEFAULT_TEMPLATE = "honey, did you forget configure template?";
+    public static final String DEFAULT_TEMPLATE = JsonUtils.toString(
+            Map.of("greeting", "honey, did you forget configure template?")
+    );
     /**
      * 模板中请求头的前缀
      */
@@ -26,4 +28,5 @@ public class Constants {
      * 模板中可以使用的函数的前缀
      */
     public static final String FUNCTION = "F";
+    public static final String NOT_FOUND = "{ \"ret_code\": \"404\", \"ret_msg\": \"未找到该路由\" }";
 }

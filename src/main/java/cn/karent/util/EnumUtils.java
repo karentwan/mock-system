@@ -1,7 +1,7 @@
 package cn.karent.util;
 
-import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -21,13 +21,12 @@ public abstract class EnumUtils {
      * @param <E>
      * @return 枚举实例
      */
-    @Nullable
-    public static <E> E match(Class<E> clazz, Predicate<E> predicate) {
+    public static <E> Optional<E> match(Class<E> clazz, Predicate<E> predicate) {
         E[] constants = clazz.getEnumConstants();
         if (ObjectUtils.isEmpty(constants)) {
-            return null;
+            return Optional.empty();
         }
-        return Stream.of(constants).filter(predicate).findFirst().orElse(null);
+        return Stream.of(constants).filter(predicate).findFirst();
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.karent.filter.plugin.parse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 
 /**
@@ -12,8 +13,8 @@ public class TextPlainParser implements Parser {
 
     @Override
     public boolean support(String contentType) {
-        return MediaType.TEXT_HTML_VALUE.equals(contentType)
-                || MediaType.TEXT_PLAIN_VALUE.equals(contentType);
+        return StringUtils.contains(contentType, MediaType.TEXT_HTML_VALUE)
+                || StringUtils.contains(contentType, MediaType.TEXT_PLAIN_VALUE);
     }
 
     @Override

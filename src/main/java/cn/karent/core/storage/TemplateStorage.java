@@ -17,7 +17,7 @@ public interface TemplateStorage {
      *
      * @param api 接口名称
      * @return 响应头
-     * @throws IOException
+     * @throws IOException io异常
      */
     Map<String, String> getHeaders(String api) throws IOException;
 

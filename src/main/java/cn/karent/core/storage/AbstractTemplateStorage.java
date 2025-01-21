@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      *
      * @param api 接口名称
      * @return 响应模板
-     * @throws IOException
+     * @throws IOException io异常
      */
     @Override
     public Template getTemplate(String api) throws IOException {
@@ -85,7 +86,7 @@ public abstract class AbstractTemplateStorage implements TemplateStorage {
      *
      * @param api 接口名称
      * @return 插件列表
-     * @throws IOException
+     * @throws IOException io异常
      */
     @Override
     public List<PluginConfig> getPlugins(String api) throws IOException {
