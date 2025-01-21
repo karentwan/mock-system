@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
  * @author wanshengdao
  * @date 2024/6/14
  */
-@RequiredArgsConstructor
 @Slf4j
 @Component
+@RequiredArgsConstructor
 @ConditionalOnProperty(prefix = "template", name = "mode", havingValue = "FILE")
 public class FileTemplateStorage extends AbstractTemplateStorage {
 

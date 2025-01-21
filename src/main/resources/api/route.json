@@ -1,0 +1,50 @@
+{
+  "api": "/test",
+  "routes": [
+    {
+      "id": "id1",
+      "template": {
+        "hello": "wan"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wan"
+          }
+        },
+        {
+          "name": "head",
+          "args": {
+            "head": "cust",
+            "value": "id"
+          }
+        }
+      ],
+      "plugins": [
+        {
+          "name": "HttpStatus",
+          "config": {
+            "status": 400
+          }
+        }
+      ]
+    },
+    {
+      "id": "id2",
+      "template": {
+        "hello": "帅哥"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wu"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -141,16 +141,133 @@ POST http://localhost:8079/config
     [
         {
             "name": "HttpStatus",
-            "config": "{\"status\": 400 }"
+            "config": {"status": 400 }
         }
     ]
 }
 
 ```
 
-使用上面的配置，当我们访问`http://localhost:8079/test` 时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
+上面是http状态码的插件配置，使用上面的配置，当我们访问`http://localhost:8079/test` 时，返回的http状态码为400，这可以在测试我们的系统时模拟一些异常情况，方便我们测试。
 
-上面的模板配置中，`plugins`是配置的插件列表，该参数配置的多个插件会以责任链的方式依次执行。
+上面的模板配置中，`plugins`是配置的插件列表，该参数配置可以配置多个插件，多个插件会依次生效。
+
+除了上面的插件，系统还内置一些其他的插件，如下：
+**延时插件**
+```shell
+POST http://localhost:8079/config
+
+{
+    "api": "/test",
+    "headers": {
+      "content-type": "application/text"
+    },
+    "template": "hello, world",
+    "plugins":
+    [
+        {
+            "name": "DelayResponse",
+            "config": {
+                "delay_time": 10,
+                "unit": "SECONDS"
+            }
+        }
+    ]
+}
+```
+
+**回调插件**
+注：回调插件可以自定义拦截器, 例如加签、验签等功能可以写在拦截器里面
+```shell
+POST http://localhost:8079/config
+
+{
+    "api": "/test",
+    "headers":
+    {
+        "content-type": "application/text"
+    },
+    "template": "hello, world",
+    "plugins":
+    [
+        {
+            "name": "Callback",
+            "config":
+            {
+                "url": "http://thirdpart:8080/callback",
+                "interval_time": 10,
+                "unit": "SECONDS",
+                "method": "POST",
+                "headers":
+                {
+                    "content-type": "application/json"
+                },
+                "body": "{\"hello\": \"world\"}",
+                "interceptor":
+                {
+                    "WeXinSignInterceptor":
+                    {
+                        "config": "key"
+                    }
+                }
+            }
+        }
+    ]
+}
+```
+上面回调拦截器后面配置的json就是POST请求的请求体, 除了json还可以使用其他的数据格式。
+
+**路由插件**
+
+当需要根据请求参数响应不同的响应体时, 可以配置路由插件, 该路由插件根据谓词(predicate)来决定请求走哪一个路由，而且路由插件具备独立的插件列表，配置方法如下：
+```shell
+{
+  "api": "/test",
+  "routes": [
+    {
+      "id": "id1",
+      "template": {
+        "hello": "wan"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wan"
+          }
+        }
+      ],
+      "plugins": [
+        {
+          "name": "HttpStatus",
+          "config": {
+            "status": 400
+          }
+        }
+      ]
+    },
+    {
+      "id": "id2",
+      "template": {
+        "hello": "帅哥"
+      },
+      "predicates": [
+        {
+          "name": "body",
+          "args": {
+            "name": "name",
+            "value": "wu"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+这上面配置有两个路由, 第一个路由条件是请求体里面含有name字段，且值为wan, 第二个路由条件是请求体里面含有name字段且值为wu,当满足第一个路由条件时，
+响应第一个路由里面配置的模板，且返回状态码为404,因为第一个路由配置了404插件。
+目前只实现了一个判断匹配请求体里面内容的谓词(predicate)。
 
 #### 自定义插件规范
 如果有自定义插件的需求，需要实现`cn.karent.filter.plugin.Plugin` 接口, 并重写它的方法：
@@ -166,3 +283,14 @@ POST http://localhost:8079/config
 
 
 **注意：自定义的插件需要加上SpringBoot的@Component注解，否则插件系统的配置将无法生效。**
+
+### 打印日志
+正常情况只会打印请求和响应信息，如果需要打印请求头信息，可以通过在参数后加`log_level`参数来调整日志级别:
+```shell
+POST http://localhost:8079/test?log_level=base
+
+{
+  "a": "123"
+}
+```
+如上是使用方法，如果log_level设为base则只会打印请求头，如果log_level设为body(默认不设就是body)，则会打印请求行和请求体, 如果将log_level设为full, 则会将请求行/请求头/请求体全部打印

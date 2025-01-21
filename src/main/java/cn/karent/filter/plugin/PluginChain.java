@@ -43,7 +43,7 @@ public class PluginChain {
 
     private void invokeUnsafeFilters(Request request, Response response) throws ServletException, IOException {
         // 构建请求
-        BodyHttpServletRequestAdapter requestAdapter = new BodyHttpServletRequestAdapter(servletRequest, request.getBody());
+        BodyHttpServletRequestAdapter requestAdapter = new BodyHttpServletRequestAdapter(servletRequest, request.getApi(), request.getBody());
         ContentCachingResponseWrapper responseAdapter = new ContentCachingResponseWrapper(servletResponse);
         filterChain.doFilter(requestAdapter, responseAdapter);
         // 拿到响应体

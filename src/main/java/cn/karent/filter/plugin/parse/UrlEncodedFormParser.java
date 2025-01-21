@@ -2,6 +2,7 @@ package cn.karent.filter.plugin.parse;
 
 import cn.karent.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 
 import java.nio.charset.StandardCharsets;
@@ -18,7 +19,7 @@ public class UrlEncodedFormParser implements Parser{
 
     @Override
     public boolean support(String contentType) {
-        return MediaType.APPLICATION_FORM_URLENCODED_VALUE.equals(contentType);
+        return StringUtils.contains(contentType, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
     }
 
     @Override

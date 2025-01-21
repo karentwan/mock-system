@@ -17,6 +17,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class Request implements Iterable<Request.HeadPair> {
 
+    @Setter
+    @Getter
+    private String api;
+
     /**
      * http请求方法
      */
