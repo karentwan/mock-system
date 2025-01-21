@@ -2,7 +2,6 @@ package cn.karent.core;
 
 import cn.karent.core.model.Response;
 import cn.karent.util.JsonUtils;
-import freemarker.template.TemplateException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
