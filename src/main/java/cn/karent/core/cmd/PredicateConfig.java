@@ -20,6 +20,6 @@ public class PredicateConfig {
 
     private String name;
 
-    private Object config;
+    private Object args;
 
 }

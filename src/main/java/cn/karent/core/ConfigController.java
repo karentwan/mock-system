@@ -66,10 +66,10 @@ public class ConfigController {
             // 注册母版
             buildTemplate(cmd.getApi(),
                     headers,
-                    "404",
+                    Constants.NOT_FOUND,
                     List.of(PluginConfig.builder()
                             .name(RoutePlugin.NAME)
-                            .config(Map.of("config", Map.of("routes", routeConfig)))
+                            .config(Map.of("routes", routeConfig))
                             .build()
                     )
             );

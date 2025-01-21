@@ -27,9 +27,9 @@ public class PredicateFactory {
 
     public static Predicate<Map<String, Object>> createPredicateComposite(List<RoutePlugin.PredicateArg> list) {
         Predicate<Map<String, Object>> p = item -> true;
-        list.forEach(item -> {
-            p.and(create(item.getName(), item.getArgs()));
-        });
+        for (RoutePlugin.PredicateArg item : list) {
+            p = p.and(create(item.getName(), item.getArgs()));
+        }
         return p;
     }
 
