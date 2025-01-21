@@ -1,5 +1,6 @@
 package cn.karent.plugin.route.predicate;
 
+import cn.karent.plugin.callback.CallbackPlugin;
 import cn.karent.plugin.route.RoutePlugin;
 
 import java.util.List;
@@ -16,8 +17,11 @@ public class PredicateFactory {
 
     public static Predicate<Map<String, Object>> create(String name, Map<String, Object> args) {
         switch (name) {
-            case "body" -> {
+            case BodyPredicate.NAME -> {
                 return new BodyPredicate(args);
+            }
+            case HeadPredicate.NAME -> {
+                return new HeadPredicate(args);
             }
             default -> {
                 throw new IllegalStateException("未知的谓词");
